@@ -5,9 +5,7 @@
 #include "ant.h"
 #include <time.h>
 #include <ctype.h>
-
 #include <iostream>
-using namespace std;
 
 //蚂蚁数量
 #define M 10
@@ -170,7 +168,6 @@ int main()
                     testCopy[i] = cd.testData[i];
 				}
 				int* tourPath = ants[j]->Search();
-                cout<<tourPath[0]<<" "<<tourPath[1]<<" "<<tourPath[2]<<" "<<tourPath[3]<<" "<<tourPath[3]<<endl; //fix:调试中，看看数据结构
                 tourCost = cd.calculateSumOfDistance(tourPath, tourUtil);			//计算每个链的总价值和利用率
 				//tourCost = Layout.Calculate(tourPath, tourUtil, testCopy);		//计算每个链的总价值和利用率
 				//tourWeight = calculateSumOfWeight(tourPath, tourUtil2);//计算重量利用率

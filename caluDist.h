@@ -67,12 +67,11 @@ public:
             {
                 if (i != j)
                 {
-                    allDistance[i][j] = calculateDistance(i, j);
-                    allDistance[j][i] = allDistance[i][j];
+                    allDistance[i][j] = testData[j].getArea();
+                    allDistance[j][i] = testData[i].getArea();
                 }
                 else
-                    //allDistance[i][j] = C[i][0];
-                    allDistance[i][j] = testData[i].getArea();
+                    allDistance[i][j] = testData[j].getArea();
             }
         }
     }

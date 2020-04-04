@@ -9,7 +9,7 @@ double AntColonySystem::Transition(int i, int j)
 {
     if (i != j)
     {
-        return (pow(info[i][j], alpha) * pow(visible[i][j], beta));
+        return (pow(info[i][j], alpha) * pow(visible[i][j], beta)); //第一个参数是已经选的
     }
     else
     {
@@ -35,7 +35,7 @@ void AntColonySystem::InitParameter(double value, CPart testData[N], double allD
             if (i != j)
             {
                 //visible[i][j] = C[j][1] / totalCost + 1 / allDistance[i][j];
-                visible[i][j] = testData[j].getArea() / totalCost + 1 / allDistance[i][j];
+                visible[i][j] = testData[j].getArea() / totalCost + 1 / allDistance[i][j]; //这里有使用allDistance初始化
                 visible[j][i] = visible[i][j];
             }
         }
@@ -50,7 +50,7 @@ void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue)
         int row = *(bestTour + 2 * i);
         int col = *(bestTour + 2 * i + 1);
         info[row][col] = (1.0 - rou) * info[row][col] + rou * 1 / (totalCost - gloalbestValue);
-        info[col][row] = info[row][col];
+        info[col][row] = info[row][col]; //fix:
     }
 }
 
@@ -101,7 +101,7 @@ int ACSAnt::Choose()
             //去掉禁忌表中已走过的节点,从剩下节点中选择最大概率的可行节点
             if (1 == allowed[i])
             {
-                double prob = antColony->Transition(currentNode, i);
+                double prob = antColony->Transition(currentNode, i); //第一个参数是已经选的
                 if (prob > probability)
                 {
                     nextNode = i;
