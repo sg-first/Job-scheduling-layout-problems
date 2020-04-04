@@ -158,7 +158,7 @@ int main()
 			//当前路径长度
 			double tourCost;
 			double tourUtil = 0;
-			for (int j = 0; j < M; j++)
+            for (int j = 0; j < M; j++) //每个蚂蚁行动
 			{
 				CLayout Layout;
 				Layout.Init(AreaWidth, AreaHeight, AreaWeight, N);

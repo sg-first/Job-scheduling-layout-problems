@@ -67,7 +67,7 @@ public:
             {
                 if (i != j)
                 {
-                    allDistance[i][j] = testData[j].getArea();
+                    allDistance[i][j] = testData[j].getArea(); //fix:改成截止日期
                     allDistance[j][i] = testData[i].getArea();
                 }
                 else

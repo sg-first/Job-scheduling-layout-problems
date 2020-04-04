@@ -19,8 +19,9 @@ double AntColonySystem::Transition(int i, int j)
 //局部更新规则
 void AntColonySystem::UpdateLocalPathRule(int i, int j)
 {
-    info[i][j] = (1.0 - alpha1) * info[i][j] + alpha1 * (1.0 / (totalCost)); // 1/N *totalVolume
-    info[j][i] = info[i][j];
+    //i是当前节点，只调向下一个节点转移的概率
+    info[i][j] = (1.0 - alpha1) * info[i][j] + alpha1 * (1.0 / (totalCost)); //fix:totalCost是？
+    //info[j][i] = info[i][j];
 }
 //初始化
 void AntColonySystem::InitParameter(double value, CPart testData[N], double allDistance[N][N])
@@ -34,23 +35,21 @@ void AntColonySystem::InitParameter(double value, CPart testData[N], double allD
             info[j][i] = value;
             if (i != j)
             {
-                //visible[i][j] = C[j][1] / totalCost + 1 / allDistance[i][j];
                 visible[i][j] = testData[j].getArea() / totalCost + 1 / allDistance[i][j]; //这里有使用allDistance初始化
-                visible[j][i] = visible[i][j];
             }
         }
     }
 }
 
 //全局信息素更新
-void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue)
+void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue) //fix:此函数要改，入炉序列生成后根据时间调整
 {
     for (int i = 0; i < N; i++)
     {
         int row = *(bestTour + 2 * i);
         int col = *(bestTour + 2 * i + 1);
-        info[row][col] = (1.0 - rou) * info[row][col] + rou * 1 / (totalCost - gloalbestValue);
-        info[col][row] = info[row][col]; //fix:
+        info[row][col] = (1.0 - rou) * info[row][col] + rou * 1 / (totalCost - gloalbestValue); //前项耗散，后项增加
+        info[col][row] = info[row][col]; //fix:需要去掉
     }
 }
 
@@ -77,7 +76,7 @@ int* ACSAnt::Search()
         if (toNode >= 0)
         {
             MoveToNextNode(toNode);
-            antColony->UpdateLocalPathRule(endNode, toNode);
+            antColony->UpdateLocalPathRule(endNode, toNode); //end是当前节点
             currentNode = toNode;
         }
     } while (toNode >= 0);

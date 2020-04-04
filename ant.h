@@ -21,7 +21,7 @@ public:
     //初始化
     void InitParameter(double value, CPart testData[], double allDistance[][N]);
     //全局信息素更新
-    void UpdateGlobalPathRule(int* bestTour, int gloalbestValue);
+    void UpdateGlobalPathRule(int *bestTour, int gloalbestValue);
 };
 
 
