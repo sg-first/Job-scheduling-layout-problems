@@ -2,13 +2,13 @@
 #include "CAreaList.h"
 #include "CLayoutList.h"
 #include "CLayout.h"
+#include "caluDist.h"
 #include <time.h>
 
 #include <ctype.h>
 
-#include<iostream>
-#include<cmath>
-#include<ctime>
+#include <iostream>
+#include <cmath>
 using namespace std;
 
 //该程序是以蚁群系统为模型写的蚁群算法程序(强调：非蚂蚁周模型)，以背包问题为测试对象
@@ -55,33 +55,6 @@ double alpha = 2, beta = 4, rou = 0.3, alpha1 = 0.1,  qzero = 0.01;
 //------------------------End problem--------------------------------------------------
 */
 //-----------------------------------the third problem----------------------------------------------
-//the max coat is 1153 total weight = 499 (the optimal solution = 1153)
-const int AreaWidth = 200;
-const int AreaHeight = 200;
-const int AreaWeight = 2000;
-const int CON_VOLUME = AreaWidth*AreaHeight ;  //背包的容积 这里当做面积
-const int CON_WEIGHT = AreaWeight;//重量
-//货物的数量
-#define N  17
-
-//测试数据
-double C[N][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1} ,{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,0},{36,15,0},{17,29,0},{19,54,0},{146,25,0 } };
-CPart testData[N];
-void InitTestPart()
-{
-	for (int i = 0; i < N; i++)
-	{
-		double weight, width, height;
-		width = C[i][0];
-		height = C[i][1];
-		weight = 1;
-		//cout << "Weight: " << C[i][2] << endl;
-		testData[i].setInfo(width, height, weight);
-		testData[i].setAmount(1);
-		testData->setId(i);
-		//cout << "Weight: " << testData[i].getWeight() << endl;
-	}
-}
 
 //蚂蚁数量
 //#define M 50
@@ -104,143 +77,7 @@ double alpha = 1, beta = 2, rou = 0.3, alpha1 = 0.1, qzero = 0.01; //these param
 double totalVolume;
 double totalCost;
 
-//矩阵表示两两结点之间的体积
-double allDistance[N][N];
-double allWeight[N][N];
 int CargoNum[N];  //number of each type cargo
-//计算两个货物的累加体积
-double calculateDistance(int i, int j)
-{
-	//return (C[i][0] + C[j][0]);
-	return testData[i].getArea() + testData[j].getArea();
-}
-
-double calculateWeight(int i, int j)
-{
-	//return (C[i][0] + C[j][0]);
-	return testData[i].getWeight() + testData[j].getWeight();
-}
-
-//由矩阵表示两两货物之间的体积 这里改完之后应该是面积
-void calculateAllDistance()
-{
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			if (i != j)
-			{
-				allDistance[i][j] = calculateDistance(i, j);
-				allDistance[j][i] = allDistance[i][j];
-			}
-			else
-				//allDistance[i][j] = C[i][0];
-				allDistance[i][j] = testData[i].getArea();
-		}
-	}
-}
-//由矩阵表示两两货物之间的重量
-void calculateAllWeight()
-{
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			if (i != j)
-			{
-				allWeight[i][j] = calculateWeight(i, j);
-				allWeight[j][i] = allWeight[i][j];
-			}
-			else
-				//allDistance[i][j] = C[i][0];
-				allWeight[i][j] = testData[i].getWeight();
-		}
-	}
-}
-
-//获得经过n个结点的路径得到的总体积
-double calculateSumOfDistance(int* tour, double& utilization)
-{
-	double sumVolume = 0;
-	double old_sum = 0;
-	double sumCost = 0;
-	double sumWeight = 0;
-	double old_Weight = 0;
-	CLayout Layout;
-	int nPutInAmount = 0;
-	Layout.Init(AreaWidth, AreaHeight, AreaWeight,N);
-	CPart copyData[N];//将原始数据复制到里面，不然放入的时候会改变零件的数量
-	for (int i = 0; i < N; i++)
-	{
-		copyData[i] = testData[i];
-	}
-	/*for (int i = 0; i < N; i++)//遍历所有的零件
-	{
-		int row = *(tour + 2 * i);//当前
-		int col = *(tour + 2 * i + 1);//下一个
-		//int nPutInAmount;//放入的数量
-		//sumVolume += C [i][0];
-		nPutInAmount = 0;
-		//list<CAreaList>::iterator itAvail= Layout.getAvaliableBegin();
-		Layout.FindUseless(copyData);
-		Layout.Merge();
-		int bTrans = Layout.CanBePutIn(copyData[row]);
-		//cout << "bTrans: " << bTrans << endl;
-		if (bTrans != 0)
-		{
-			nPutInAmount = Layout.PutIn(copyData[row], bTrans);
-			if (nPutInAmount != 0)
-			{
-				sumVolume = sumVolume + (allDistance[row][col] - allDistance[col][col]);
-				sumWeight += allWeight[row][col] - allWeight[col][col];
-			}
-			//cout << "nPutInAmount: " << nPutInAmount << endl;
-		}
-		else
-		{
-			//cout << "nPutInAmount: " << nPutInAmount << " Break Called" << endl;
-			sumVolume = old_sum;
-			sumWeight = old_Weight;
-			//break;
-		}
-		old_sum = sumVolume;
-		old_Weight = sumWeight;
-		//sumCost += (allDistance[row][col] - allDistance[col][col]);
-		//sumCost += C[row][1];
-		sumCost += copyData[row].getArea() * nPutInAmount;
-	}*/
-	sumCost = Layout.Calculate(tour, copyData);
-	//cout << "Calculate: sumCost: " << sumCost << endl;
-	utilization = sumVolume / CON_VOLUME;
-	return sumCost;
-}
-
-//获得经过n个结点的路径得到的总重量
-/*double calculateSumOfWeight(int* tour, double& utilization)
-{
-	double sumWeight = 0;
-	double old_sum = 0;
-	double sumCost = 0;
-	for (int i = 0; i < N; i++)
-	{
-		int row = *(tour + 2 * i);
-		int col = *(tour + 2 * i + 1);
-		//sumVolume += C [i][0];
-		sumWeight = sumWeight + (allWeight[row][col] - allWeight[col][col]);
-
-		if (sumWeight > CON_WEIGHT)
-		{
-			sumWeight = old_sum;
-			break;
-		}
-		old_sum = sumWeight;
-		//sumCost += (allDistance[row][col] - allDistance[col][col]);
-		//sumCost += C[row][1];
-		sumCost += testData[row].getWeight();
-	}
-	utilization = sumWeight / CON_WEIGHT;
-	return sumCost;
-}*/
 
 class ACSAnt;
 
@@ -257,7 +94,7 @@ public:
 	//局部更新规则
 	void UpdateLocalPathRule(int i, int j);
 	//初始化
-	void InitParameter(double value);
+    void InitParameter(double value, CPart testData[], double allDistance[][N]);
 	//全局信息素更新
 	void UpdateGlobalPathRule(int* bestTour, int gloalbestValue);
 };
@@ -281,7 +118,7 @@ void AntColonySystem::UpdateLocalPathRule(int i, int j)
 	info[j][i] = info[i][j];
 }
 //初始化
-void AntColonySystem::InitParameter(double value)
+void AntColonySystem::InitParameter(double value, CPart testData[N], double allDistance[N][N])
 {
 	//初始化路径上的信息素强度tao0
 	for (int i = 0; i < N; i++)
@@ -433,7 +270,7 @@ void ACSAnt::MoveToNextNode(int nextNode)
 
 //------------------------------------------
 //选择下一个节点，配合下面的函数来计算的长度
-int ChooseNextNode(int currentNode, int visitedNode[])
+int ChooseNextNode(int currentNode, int visitedNode[],double allDistance[N][N])
 {
 	int nextNode = -1;
 	double shortDistance = 0.0;
@@ -457,7 +294,7 @@ int ChooseNextNode(int currentNode, int visitedNode[])
 }
 
 //给一个节点由最近邻距离方法计算长度
-double CalAdjacentDistance(int node, double& sumCost)
+double CalAdjacentDistance(int node, double& sumCost, double allDistance[N][N], CPart testData[N])
 {
 	double sum = 0.0;
 	sumCost = 0;
@@ -471,7 +308,7 @@ double CalAdjacentDistance(int node, double& sumCost)
 	int nextNode;
 	do
 	{
-		nextNode = ChooseNextNode(currentNode, visitedNode);
+        nextNode = ChooseNextNode(currentNode, visitedNode, allDistance);
 		if (nextNode >= 0)
 		{
 			sum += allDistance[currentNode][nextNode] - allDistance[currentNode][currentNode];
@@ -521,10 +358,9 @@ void CLayout::FindUseless(CPart* data)
 //---------------------------------结束---------------------------------------------
 
 //--------------------------主函数--------------------------------------------------
-//int _tmain(int argc, _TCHAR* argv[])
 int main()
 {
-    InitTestPart();
+    caluDist cd; //包含初始化测试数据
     int start = 1;
 	if (start)
 	{
@@ -536,7 +372,7 @@ int main()
 		srand((unsigned int)seed);
 
 		//由矩阵表示两两城市之间的距离
-		calculateAllDistance();
+        cd.calculateAllDistance();
 		//蚁群系统对象
 		AntColonySystem* acs = new AntColonySystem();
 		ACSAnt* ants[M];
@@ -545,16 +381,16 @@ int main()
 		{
 			ants[k] = new ACSAnt(acs, (int)(k % N));
 		}
-		calculateAllDistance();
-		calculateAllWeight();
+        cd.calculateAllDistance();
+        cd.calculateAllWeight();
 		//随机选择一个节点计算由最近邻方法得到的一个长度
 		int node = rand() % N;
 
-		totalVolume = CalAdjacentDistance(node, totalCost);
+        totalVolume = CalAdjacentDistance(node, totalCost,cd.allDistance,cd.testData);
 
 		//各条路径上初始化的信息素强度
 		double initInfo = 1 / (totalCost);      //1 / (N * totalVolume);
-		acs->InitParameter(initInfo);
+        acs->InitParameter(initInfo,cd.testData,cd.allDistance);
 
 		//全局最优路径
 		int globalTour[N][2];
@@ -568,9 +404,7 @@ int main()
 			double localBestValue = 0.0;
 			//当前路径长度
 			double tourCost;
-			double tourWeight;//重量利用
 			double tourUtil = 0;
-			double tourUtil2 = 0;
 			for (int j = 0; j < M; j++)
 			{
 				CLayout Layout;
@@ -578,11 +412,11 @@ int main()
 				CPart testCopy[N];
 				for (int i = 0; i < N; i++)
 				{
-					testCopy[i] = testData[i];
+                    testCopy[i] = cd.testData[i];
 				}
 				int* tourPath = ants[j]->Search();
-                cout<<tourPath[0]<<" "<<tourPath[1]<<" "<<tourPath[2]<<" "<<tourPath[3]<<" "<<tourPath[3]<<endl;
-				tourCost = calculateSumOfDistance(tourPath, tourUtil);			//计算每个链的总价值和利用率
+                cout<<tourPath[0]<<" "<<tourPath[1]<<" "<<tourPath[2]<<" "<<tourPath[3]<<" "<<tourPath[3]<<endl; //fix:调试中，看看数据结构
+                tourCost = cd.calculateSumOfDistance(tourPath, tourUtil);			//计算每个链的总价值和利用率
 				//tourCost = Layout.Calculate(tourPath, tourUtil, testCopy);		//计算每个链的总价值和利用率
 				//tourWeight = calculateSumOfWeight(tourPath, tourUtil2);//计算重量利用率
 				//cout << "Main: tourWeight: " << tourWeight << endl;
@@ -633,37 +467,10 @@ int main()
 		CPart copyData[N];//将原始数据复制到里面，不然放入的时候会改变零件的数量
 		for (int i = 0; i < N; i++)
 		{
-			copyData[i] = testData[i];
+            copyData[i] = cd.testData[i];
 		}
-		/*for (int m = 0; m < N; m++)
-		{
-			//sum += C[globalTour[m][0]][0];
-			int bTrans = Layout.CanBePutIn(copyData[globalTour[m][0]]);
-			//cout << "bTrans: " << bTrans << endl;
-			if (bTrans != 0)
-			{
-				//Layout.FindUseless(copyData);
-				//Layout.Merge();
-				nPutInAmount = Layout.PutIn(copyData[globalTour[m][0]], bTrans);
-				if (nPutInAmount != 0)
-				{
-					sum += copyData[globalTour[m][0]].getArea() * nPutInAmount;
-					sumWeight += copyData[globalTour[m][0]].getWeight() * nPutInAmount;
-				}				
-			}
-			else
-			{
-				//cout << "main nPutInAmount: " << nPutInAmount << " Break Called Part: " << globalTour[m][0] << endl;
-				sum = old_sum;
-				sumWeight = old_sumWeight;
-				//break;
-			}
-			old_sum = sum;
-			old_sumWeight = sumWeight;
-			cout << globalTour[m][0] << ", ";
-			//cout << testData[globalTour[0][0]].getHeight() << " " << testData[globalTour[0][0]].getWidth() << endl;
-		}*/
-		int tour[N];
+
+        int tour[N];
 		for (int i = 0; i < N; i++)
 		{
 			tour[i] = globalTour[i][0];

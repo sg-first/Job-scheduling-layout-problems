@@ -12,4 +12,5 @@ HEADERS += \
     CLayout.h \
     CLayoutList.h \
     CPart.h \
-    CRectangle.h
+    CRectangle.h \
+    caluDist.h
