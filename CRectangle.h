@@ -1,5 +1,5 @@
 #pragma once
-#include <graphics.h>
+//#include <graphics.h>
 #include <conio.h>
 #include <iostream>
 #include <string>
@@ -13,15 +13,15 @@ public:
 		w_width = w_wid;
 		w_height = w_hei;
 	}
-	void draw(int offset_x, int offset_y)
+    /*void draw(int offset_x, int offset_y)
 	{
 		setlinecolor(YELLOW);
-		setfillstyle(BS_SOLID);  //Ìî³äÑùÊ½Îª¹ÌÊµÌî³ä
+		setfillstyle(BS_SOLID);
 		if (orientedF)
-			rectangle(offset_x + leftX, w_height - leftY - width - offset_y, offset_x + leftX + length, w_height - leftY - offset_y);  //»­¾ØÐÎ
+			rectangle(offset_x + leftX, w_height - leftY - width - offset_y, offset_x + leftX + length, w_height - leftY - offset_y);  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		else
 			rectangle(offset_x + leftX, w_height - leftY - length - offset_y, offset_x + leftX + width, w_height - leftY - offset_y);
-	}
+    }*/
 	int w_height, w_width;
 	void move(int offset_x, int offset_y) {}
 	int leftX, leftY;

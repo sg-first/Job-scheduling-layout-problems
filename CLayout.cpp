@@ -647,7 +647,7 @@ double CLayout::Calculate(int* tour,CPart* Part)
 }*/
 
 
-void CLayout::showLayoutList()
+/*void CLayout::showLayoutList()
 {      
 	auto itLayoutList = m_lstLayout.begin();
 	int grapWidth = 400, grapHeight = 400;
@@ -675,7 +675,7 @@ void CLayout::showLayoutList()
 	_getch();
 	// 关闭图形窗口
 	closegraph();
-}
+}*/
 
 void CLayout::testMerge()
 {
@@ -703,7 +703,7 @@ void CLayout::testMerge()
 void CLayout::showLayoutPartNo()
 {
 	auto p = m_lstLayout.begin();
-	cout << "放入零件的编号" << endl;
+    cout << "Part number (sequence):" << endl;
 	for (; p != m_lstLayout.end(); p++)
 	{
 		cout << p->getPart().getID() << endl;

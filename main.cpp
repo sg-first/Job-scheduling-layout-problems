@@ -645,7 +645,7 @@ int main()
 			}
 			acs->UpdateGlobalPathRule(*globalTour, gloalbestValue);
 			//输出所有蚂蚁循环一次后的迭代最优路径
-			cout << "第 " << i + 1 << " 迭代最优路径:" << localBestValue << "." << endl;
+            cout << "Iterative optimal path " << i + 1 << localBestValue << "." << endl;
 			for (int m = 0; m < N; m++)
 			{
 				cout << localTour[m][0] << ".";
@@ -654,9 +654,9 @@ int main()
 			cout << endl;
 		}
 		//输出全局最优路径
-		cout << "全局最优路径总价值:" << gloalbestValue << endl;
+        cout << "Total value:" << gloalbestValue << endl;
 
-		cout << "全局最优装入结果:";
+        cout << "Loading result:";
 		double sum = 0;
 		double old_sum = 0;
 		double sumWeight = 0;
@@ -705,19 +705,18 @@ int main()
 		}
 		sum=Layout.Calculate(tour, copyData);
 		cout << endl;
-		cout << "全局最优价值的总体积:" << sum << " 全局最优价值的体积利用率:" << sum / CON_VOLUME << endl;
-		cout << "使用的重量： " << sumWeight << endl;
+        cout << "Total volume:" << sum << " Utilization ratio:" << sum / CON_VOLUME << endl;
+        cout << "Total weight:" << sumWeight << endl;
 		time(&timerl);
 		double t = timerl - timer;
 		//cout << testData[globalTour[0][0]].getHeight() << " " << testData[globalTour[0][0]].getWidth() << endl;
-		Layout.showLayoutList();
+        //Layout.showLayoutList();
 		cout << Layout.AvailSize() << endl;
-		cout << "装入布局个数 " << Layout.getLayoutListSize() << endl;
-		cout << "time " << t << endl;
+        cout << "Number of parts:" << Layout.getLayoutListSize() << endl;
+        cout << "time:" << t << endl;
 		Layout.showLayoutPartNo();
 		//initgraph(640, 480);
 		//setorigin(0,0);
-		system("pause");
 		return 0;
 	}
 	
