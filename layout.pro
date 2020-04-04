@@ -5,6 +5,7 @@ CONFIG -= qt
 
 SOURCES += \
         CLayout.cpp \
+        ant.cpp \
         main.cpp
 
 HEADERS += \
@@ -13,4 +14,5 @@ HEADERS += \
     CLayoutList.h \
     CPart.h \
     CRectangle.h \
+    ant.h \
     caluDist.h
