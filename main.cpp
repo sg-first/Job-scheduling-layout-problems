@@ -63,21 +63,11 @@ const int CON_VOLUME = AreaWidth*AreaHeight ;  //背包的容积 这里当做面
 const int CON_WEIGHT = AreaWeight;//重量
 //货物的数量
 #define N  17
-//volume and weigh of each cargo
-/*double C[N][2] = {
-		{19, 12},{53, 61},{61, 63},{74, 78},{98, 49},{70, 46},{15, 44},{59, 36},{64, 37},{29, 66},
-		{98, 43},{79, 16},{74, 14},{85, 73},{52, 72},{70, 72},{84, 83},{91, 15},{84, 83},{75, 65},
-		{78, 21},{72, 49},{5, 36},{46, 20},{26, 22},{95, 80},{38, 94},{79, 3},{28, 73},{92, 1},
-		{12, 91},{37, 62},{37, 8},{58, 58},{94, 79},{44, 67},{25, 53},{3, 8},{12, 85},{67, 82},
-		{2, 70},{98, 43},{12, 22},{2, 53},{34, 22},{68, 14},{68, 41},{81, 41},{92, 77},{16, 75}
-};*/
-/*double C[N][3] = {
-	{6,7,8},{11,2,6},{11,1,4},{5,5,4},{4,4,2},{3,6,4},{4,4,6},{6,5,7},{6,7,6},{7,7,9}
-};*/
-//毕业论文的测试数据，这里面没有重量
+
+//测试数据
 double C[N][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1} ,{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,0},{36,15,0},{17,29,0},{19,54,0},{146,25,0 } };
 CPart testData[N];
-void InitPart()
+void InitTestPart()
 {
 	for (int i = 0; i < N; i++)
 	{
@@ -92,6 +82,7 @@ void InitPart()
 		//cout << "Weight: " << testData[i].getWeight() << endl;
 	}
 }
+
 //蚂蚁数量
 //#define M 50
 #define M 10
@@ -123,6 +114,7 @@ double calculateDistance(int i, int j)
 	//return (C[i][0] + C[j][0]);
 	return testData[i].getArea() + testData[j].getArea();
 }
+
 double calculateWeight(int i, int j)
 {
 	//return (C[i][0] + C[j][0]);
@@ -532,32 +524,8 @@ void CLayout::FindUseless(CPart* data)
 //int _tmain(int argc, _TCHAR* argv[])
 int main()
 {
-	InitPart();
-	/*CLayout test1;
-	test1.Init(AreaWidth, AreaHeight, AreaWeight);
-	CPart testCopy[N];
-	for (int i = 0; i < N; i++)
-	{
-		testCopy[i] = testData[i];
-	}
-	test1.testMerge();*/
-	//test1.FindUseless(testCopy);
-	/*int bTrans = 1;
-	cout << "\n装入数量： " << test1.PutIn(testCopy[0], bTrans) << endl;
-	//for (int i = 0; i < N; i++)
-	for(int i=N-1;i>=0;i--)
-	{
-		cout << endl << "测试零件 " << i << endl;
-		int bTrans = test1.CanBePutIn(testCopy[i]);
-		if (bTrans == 0) cout << "不能放入 bTrans: " << bTrans << endl;
-		else if (bTrans == -1) cout << "转置放入 bTrans: " << bTrans << endl;
-		else cout << "不转置放入 bTrans: " << bTrans << endl;
-		if (bTrans != 0)
-		{
-			cout << "\n装入数量： " << test1.PutIn(testCopy[i], bTrans) << endl;
-		}
-	}*/
-	int start = 1;
+    InitTestPart();
+    int start = 1;
 	if (start)
 	{
 		time_t timer, timerl;
@@ -613,6 +581,7 @@ int main()
 					testCopy[i] = testData[i];
 				}
 				int* tourPath = ants[j]->Search();
+                cout<<tourPath[0]<<" "<<tourPath[1]<<" "<<tourPath[2]<<" "<<tourPath[3]<<" "<<tourPath[3]<<endl;
 				tourCost = calculateSumOfDistance(tourPath, tourUtil);			//计算每个链的总价值和利用率
 				//tourCost = Layout.Calculate(tourPath, tourUtil, testCopy);		//计算每个链的总价值和利用率
 				//tourWeight = calculateSumOfWeight(tourPath, tourUtil2);//计算重量利用率
@@ -658,11 +627,8 @@ int main()
 
         cout << "Loading result:";
 		double sum = 0;
-		double old_sum = 0;
 		double sumWeight = 0;
-		double  old_sumWeight = 0;
 		CLayout Layout;
-		int nPutInAmount;
 		Layout.Init(AreaWidth, AreaHeight, AreaWeight, N);
 		CPart copyData[N];//将原始数据复制到里面，不然放入的时候会改变零件的数量
 		for (int i = 0; i < N; i++)
