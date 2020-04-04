@@ -294,7 +294,7 @@ int ChooseNextNode(int currentNode, int visitedNode[],double allDistance[N][N])
 }
 
 //给一个节点由最近邻距离方法计算长度
-double CalAdjacentDistance(int node, double& sumCost, double allDistance[N][N], CPart testData[N])
+double CalAdjacentDistance(int node, double& sumCost, caluDist &cd)
 {
 	double sum = 0.0;
 	sumCost = 0;
@@ -308,19 +308,19 @@ double CalAdjacentDistance(int node, double& sumCost, double allDistance[N][N], 
 	int nextNode;
 	do
 	{
-        nextNode = ChooseNextNode(currentNode, visitedNode, allDistance);
+        nextNode = ChooseNextNode(currentNode, visitedNode, cd.allDistance);
 		if (nextNode >= 0)
 		{
-			sum += allDistance[currentNode][nextNode] - allDistance[currentNode][currentNode];
-			sumCost += C[currentNode][1];
+            sum += cd.allDistance[currentNode][nextNode] - cd.allDistance[currentNode][currentNode];
+            sumCost += cd.C[currentNode][1];
 			currentNode = nextNode;
 			visitedNode[currentNode] = 0;
 		}
 	} while (nextNode >= 0);
-	sum += allDistance[currentNode][node] - allDistance[currentNode][currentNode];
+    sum += cd.allDistance[currentNode][node] - cd.allDistance[currentNode][currentNode];
 
 	//sumCost += C[currentNode][1];
-	sumCost += testData[currentNode].getArea();
+    sumCost += cd.testData[currentNode].getArea();
 	return sum;
 }
 
@@ -360,7 +360,10 @@ void CLayout::FindUseless(CPart* data)
 //--------------------------主函数--------------------------------------------------
 int main()
 {
-    caluDist cd; //包含初始化测试数据
+    //初始数据
+    double C[N][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1},{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,0},{36,15,0},{17,29,0},{19,54,0},{146,25,0 } };
+    caluDist cd(C); //包含初始化测试数据
+
     int start = 1;
 	if (start)
 	{
@@ -386,7 +389,7 @@ int main()
 		//随机选择一个节点计算由最近邻方法得到的一个长度
 		int node = rand() % N;
 
-        totalVolume = CalAdjacentDistance(node, totalCost,cd.allDistance,cd.testData);
+        totalVolume = CalAdjacentDistance(node, totalCost,cd);
 
 		//各条路径上初始化的信息素强度
 		double initInfo = 1 / (totalCost);      //1 / (N * totalVolume);

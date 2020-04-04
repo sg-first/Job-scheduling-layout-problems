@@ -23,7 +23,7 @@ public:
 			rectangle(offset_x + leftX, w_height - leftY - length - offset_y, offset_x + leftX + width, w_height - leftY - offset_y);
     }*/
 	int w_height, w_width;
-	void move(int offset_x, int offset_y) {}
+    //void move(int offset_x, int offset_y) {}
 	int leftX, leftY;
 	int length, width;
 	int orientedF;

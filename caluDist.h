@@ -12,21 +12,20 @@ const int AreaWeight = 2000;
 const int CON_VOLUME = AreaWidth*AreaHeight ;  //背包的容积 这里当做面积
 const int CON_WEIGHT = AreaWeight;//重量
 
-//初始数据
-//fix:这么写不行，但先这样
-const double C[N][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1} ,{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,0},{36,15,0},{17,29,0},{19,54,0},{146,25,0 } };
-
 class caluDist
 {
 public:
-    caluDist()
+    double (*C)[3];
+
+    caluDist(double C[N][3])
     {
-        this->InitTestPart(C);
+        this->C=C;
+        this->InitTestPart();
     }
 
     //测试数据
     CPart testData[N];
-    void InitTestPart(const double C[N][3])
+    void InitTestPart()
     {
         for (int i = 0; i < N; i++)
         {
