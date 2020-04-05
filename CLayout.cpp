@@ -1,6 +1,7 @@
 ﻿#include "CLayout.h"
 #include <algorithm>
 #include <iostream>
+#include "caluDist.h"
 
 using namespace std;
 
@@ -48,10 +49,6 @@ int CLayout::CanBePutIn(CPart Part)//这里没有考虑可用空间为0的情况
 	}
 	//cout<< " AvailableSize: " << m_lstAvailable.size() << endl;
 	list<CAreaList>::iterator itAvail = this->m_lstAvailable.begin();
-	//cout << "CanBePutIn: AvailH: " << itAvail->getHeight() << " Y:" << itAvail->getY() << endl;
-	double dAreaWidth = itAvail->getWidth();
-	double dAreaHeight = itAvail->getHeight();
-	int nSurPlusAmount = Part.getSurplusAmount();
 	double dPartWidth = Part.getWidth();
 	double dPartHeight = Part.getHeight();
 	int nVerticalMost, nHorizonMost;//竖直、水平方向最多放置
@@ -708,4 +705,34 @@ void CLayout::showLayoutPartNo()
 	{
 		cout << p->getPart().getID() << endl;
 	}
+}
+
+void CLayout::FindUseless(CPart* data)
+{
+    if (m_lstAvailable.empty()) return;
+    list<CAreaList>::iterator itAvail = m_lstAvailable.begin();
+    int Useless = 1;
+    for (int i = 0; i < partNum; i++)
+    {
+        int nCanbePutIn = this->CanBePutIn(data[i]);
+        if (nCanbePutIn != 0)
+        {
+            //cout << "Canputin" << endl;
+            Useless = 0;
+            return;
+        }
+    }
+    if (Useless)
+    {
+        CAreaList tmpArea;
+        tmpArea.setX(itAvail->getX());
+        tmpArea.setY(itAvail->getY());
+        tmpArea.setWidth(itAvail->getWidth());
+        tmpArea.setHeight(itAvail->getHeight());
+        m_lstUseless.push_back(tmpArea);
+        //cout << "Useless" << endl;
+        //cout << "FindUseless UselessSize " << m_lstUseless.size() << endl;
+        m_lstAvailable.pop_front();
+        //m_lstAvailable.erase(itAvail);
+    }
 }

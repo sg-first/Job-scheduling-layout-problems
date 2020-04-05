@@ -71,45 +71,13 @@ double CalAdjacentDistance(int node, double& sumCost, caluDist &cd)
     sumCost += cd.testData[currentNode].getArea();
 	return sum;
 }
-
-void CLayout::FindUseless(CPart* data)
-{
-	if (m_lstAvailable.empty()) return;
-	list<CAreaList>::iterator itAvail = m_lstAvailable.begin();
-	int Useless = 1;
-    for (int i = 0; i < partNum; i++)
-	{
-		int nCanbePutIn = this->CanBePutIn(data[i]);
-		if (nCanbePutIn != 0)
-		{
-			//cout << "Canputin" << endl;
-			Useless = 0;
-			return;
-		}
-	}
-	if (Useless)
-	{
-		CAreaList tmpArea;
-		tmpArea.setX(itAvail->getX());
-		tmpArea.setY(itAvail->getY());
-		tmpArea.setWidth(itAvail->getWidth());
-		tmpArea.setHeight(itAvail->getHeight());
-		m_lstUseless.push_back(tmpArea);
-		//cout << "Useless" << endl;
-		//cout << "FindUseless UselessSize " << m_lstUseless.size() << endl;
-		m_lstAvailable.pop_front();
-		//m_lstAvailable.erase(itAvail);
-	}
-}
-
-
 //---------------------------------结束---------------------------------------------
 
 //--------------------------主函数--------------------------------------------------
 int main()
 {
     //初始数据
-    double C[partNum][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1},{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,0},{36,15,0},{17,29,0},{19,54,0},{146,25,0 } };
+    double C[partNum][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1},{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,1},{36,15,1},{17,29,1},{19,54,1},{146,25,1} };
     caluDist cd(C); //包含初始化测试数据
 
     int start = 1;
@@ -244,4 +212,3 @@ int main()
 	}
 	
 }
-//--------------------------主函数结束--------------------------------------------------
