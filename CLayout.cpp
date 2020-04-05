@@ -657,16 +657,15 @@ double CLayout::Calculate(int* tour,CPart* Part)
 	int i = 0;
 	for (; itLayoutList != m_lstLayout.end(); itLayoutList++)
 	{
-		CRectangle part(itLayoutList->getX(), itLayoutList->getY(), itLayoutList->getH(), itLayoutList->getW(), grapWidth, grapHeight);
-		part.draw(tranX, tranY);
+        CRectangle part(itLayoutList->getX(), itLayoutList->getY(), itLayoutList->getW(), itLayoutList->getH(), grapWidth, grapHeight);
+        part.draw(tranX, tranY);
 		//cout << "X: " << itLayoutList->getX() << " Y: " << itLayoutList->getY() << " H: " << itLayoutList->getH() << " W: " << itLayoutList->getW() << " ";
 		//cout << "Width: " << itLayoutList->getPart().getWidth() * itLayoutList->getHorizonAmount() << " Height: " << itLayoutList->getPart().getHeight() * itLayoutList->getVerticalAmount() << " HorizonAmount: " << itLayoutList->getHorizonAmount() << " VerticalAmount: " << itLayoutList->getVerticalAmount() << endl;
 		//swprintf_s(s, _T("%d"), itLayoutList->getPart().getID());
 		int Id = itLayoutList->getPart().getID();
 		swprintf_s(s, _T("%d"), Id);
-		//outtextxy(part.leftX * 2 + part.length, (grapHeight - part.leftY - part.width / 2 - tranY) * 2, s); //标注数字
-		outtextxy(part.leftX + part.length / 2, grapHeight - part.leftY - part.width / 2 - tranY, s); //标注数字
-		i++;
+        outtextxy(tranX + part.leftX + part.length / 3, grapHeight - part.leftY - part.width/ 2 - tranY, s); //标注数字
+        //i++;
 	}
 	cout << "放入的布局数量 " << i << endl;
 	_getch();
