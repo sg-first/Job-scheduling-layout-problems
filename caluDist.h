@@ -13,6 +13,25 @@ const int CON_WEIGHT = AreaWeight;//÷ÿ¡ø
 
 class caluDist
 {
+private:
+    int getMaxDeadLine()
+    {
+        int max=0;
+        for (int i = 0; i < partNum; i++)
+        {
+            if(this->C[i][4]>max)
+                max=this->C[i][4];
+        }
+        return max;
+    }
+
+    void deadLineInv()
+    {
+        int max=getMaxDeadLine();
+        for (int i = 0; i < partNum; i++)
+            this->C[i][4]=max-this->C[i][4];
+    }
+
 public:
     double (*C)[3];
 
