@@ -2,8 +2,7 @@
 #include "CPart.h"
 #include "CLayout.h"
 
-//货物的数量
-const int N=17;
+const int partNum=17;
 
 //the max coat is 1153 total weight = 499 (the optimal solution = 1153)
 const int AreaWidth = 200;
@@ -17,17 +16,17 @@ class caluDist
 public:
     double (*C)[3];
 
-    caluDist(double C[N][3])
+    caluDist(double C[partNum][3])
     {
         this->C=C;
         this->InitTestPart();
     }
 
     //测试数据
-    CPart testData[N];
+    CPart testData[partNum];
     void InitTestPart()
     {
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < partNum; i++)
         {
             double weight, width, height;
             width = C[i][0];
@@ -42,8 +41,8 @@ public:
     }
 
     //矩阵表示两两结点之间的体积
-    double allDistance[N][N];
-    double allWeight[N][N];
+    double allDistance[partNum][partNum];
+    double allWeight[partNum][partNum];
 
     //计算两个货物的累加体积
     double calculateDistance(int i, int j)
@@ -61,9 +60,9 @@ public:
     //由矩阵表示两两货物之间的体积 这里改完之后应该是面积
     void calculateAllDistance()
     {
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < partNum; i++)
         {
-            for (int j = 0; j < N; j++)
+            for (int j = 0; j < partNum; j++)
             {
                 if (i != j)
                 {
@@ -78,9 +77,9 @@ public:
     //由矩阵表示两两货物之间的重量
     void calculateAllWeight()
     {
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < partNum; i++)
         {
-            for (int j = 0; j < N; j++)
+            for (int j = 0; j < partNum; j++)
             {
                 if (i != j)
                 {
@@ -100,9 +99,9 @@ public:
         double sumVolume = 0;
         double sumCost = 0;
         CLayout Layout;
-        Layout.Init(AreaWidth, AreaHeight, AreaWeight,N);
-        CPart copyData[N];//将原始数据复制到里面，不然放入的时候会改变零件的数量
-        for (int i = 0; i < N; i++)
+        Layout.Init(AreaWidth, AreaHeight, AreaWeight,partNum);
+        CPart copyData[partNum];//将原始数据复制到里面，不然放入的时候会改变零件的数量
+        for (int i = 0; i < partNum; i++)
         {
             copyData[i] = testData[i];
         }

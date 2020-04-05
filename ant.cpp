@@ -24,12 +24,12 @@ void AntColonySystem::UpdateLocalPathRule(int i, int j)
     //info[j][i] = info[i][j];
 }
 //初始化
-void AntColonySystem::InitParameter(double value, CPart testData[N], double allDistance[N][N])
+void AntColonySystem::InitParameter(double value, CPart testData[partNum], double allDistance[partNum][partNum])
 {
     //初始化路径上的信息素强度tao0
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < partNum; i++)
     {
-        for (int j = 0; j < N; j++)
+        for (int j = 0; j < partNum; j++)
         {
             info[i][j] = value;
             info[j][i] = value;
@@ -44,12 +44,12 @@ void AntColonySystem::InitParameter(double value, CPart testData[N], double allD
 //全局信息素更新
 void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue) //fix:此函数要改，入炉序列生成后根据时间调整
 {
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < partNum; i++)
     {
         int row = *(bestTour + 2 * i);
         int col = *(bestTour + 2 * i + 1);
-        info[row][col] = (1.0 - rou) * info[row][col] + rou * 1 / (totalCost - gloalbestValue); //前项耗散，后项增加
-        info[col][row] = info[row][col]; //fix:需要去掉
+        info[row][col] += /*(1.0 - rou) * info[row][col] +*/ rou * 1 / (totalCost - gloalbestValue); //耗散去掉了，只给最优路径中节点增加
+        //info[col][row] = info[row][col]; //fix:需要去掉
     }
 }
 
@@ -61,7 +61,7 @@ int* ACSAnt::Search()
     currentNode = startNode;
     int toNode;
     currentTourIndex = 0;
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < partNum; i++)
     {
         allowed[i] = 1;
     }
@@ -95,7 +95,7 @@ int ACSAnt::Choose()
     if (q <= qzero)
     {
         double probability = -1.0;//转移到下一节点的概率
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < partNum; i++)
         {
             //去掉禁忌表中已走过的节点,从剩下节点中选择最大概率的可行节点
             if (1 == allowed[i])
@@ -116,14 +116,14 @@ int ACSAnt::Choose()
         double sum = 0.0;
         double probability = 0.0;//概率的区间点，p 落在哪个区间段，则该点是转移的方向
         //计算概率公式的分母的值
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < partNum; i++)
         {
             if (1 == allowed[i])
             {
                 sum += antColony->Transition(currentNode, i);
             }
         }
-        for (int j = 0; j < N; j++)
+        for (int j = 0; j < partNum; j++)
         {
             if (1 == allowed[j] && sum > 0)
             {
