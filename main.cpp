@@ -42,7 +42,7 @@ int ChooseNextNode(int currentNode, int visitedNode[],double allDistance[partNum
 }
 
 //给一个节点由最近邻距离方法计算长度
-double CalAdjacentDistance(int node, double& sumCost, caluDist &cd)
+double CalAdjacentDistance(int node, double& sumCost, caluDist &cd) //sumCost就是totalCost
 {
 	double sum = 0.0;
 	sumCost = 0;
@@ -60,7 +60,7 @@ double CalAdjacentDistance(int node, double& sumCost, caluDist &cd)
 		if (nextNode >= 0)
 		{
             sum += cd.allDistance[currentNode][nextNode] - cd.allDistance[currentNode][currentNode];
-            sumCost += cd.C[currentNode][1];
+            sumCost += cd.testData[currentNode].getArea(); //fix: 改成截止日期
 			currentNode = nextNode;
 			visitedNode[currentNode] = 0;
 		}
