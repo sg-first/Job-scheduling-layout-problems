@@ -59,17 +59,17 @@ double CalAdjacentDistance(int node, double& sumCost, caluDist &cd) //sumCost就
         nextNode = ChooseNextNode(currentNode, visitedNode, cd.allDistance);
 		if (nextNode >= 0)
 		{
-            sum += cd.allDistance[currentNode][nextNode] - cd.allDistance[currentNode][currentNode];
+            //sum += cd.allDistance[currentNode][nextNode] - cd.allDistance[currentNode][currentNode];
             sumCost += cd.testData[currentNode].getArea(); //fix: 改成截止日期
 			currentNode = nextNode;
 			visitedNode[currentNode] = 0;
 		}
 	} while (nextNode >= 0);
-    sum += cd.allDistance[currentNode][node] - cd.allDistance[currentNode][currentNode];
+    //sum += cd.allDistance[currentNode][node] - cd.allDistance[currentNode][currentNode];
 
 	//sumCost += C[currentNode][1];
     sumCost += cd.testData[currentNode].getArea();
-	return sum;
+    return sumCost;
 }
 //---------------------------------结束---------------------------------------------
 
