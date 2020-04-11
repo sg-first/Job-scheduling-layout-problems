@@ -107,8 +107,7 @@ int main()
         AntColonySystem::totalCost = CalAdjacentDistance(node,cd);
 
 		//各条路径上初始化的信息素强度
-        double initInfo = 1 / AntColonySystem::totalCost;      //1 / (N * totalVolume);
-        acs->InitParameter(initInfo,cd.testData,cd.allDistance);
+        acs->InitParameter(cd.testData,cd.allDistance);
 
 		//全局最优路径
         int globalTour[partNum][2];

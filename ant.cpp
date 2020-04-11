@@ -19,22 +19,21 @@ double AntColonySystem::Transition(int i, int j)
 void AntColonySystem::UpdateLocalPathRule(int i, int j)
 {
     //i是当前节点，只调向下一个节点转移的概率
-    info[i][j] = (1.0 - alpha1) * info[i][j] + alpha1 * (1.0 / (totalCost)); //fix:totalCost是？
-    //info[j][i] = info[i][j];
+    info[i][j] = (1.0 - alpha1) * info[i][j];
 }
 //初始化
-void AntColonySystem::InitParameter(double value, CPart testData[partNum], double allDistance[partNum][partNum])
+void AntColonySystem::InitParameter(CPart testData[partNum], double allDistance[partNum][partNum])
 {
     //初始化路径上的信息素强度tao0
     for (int i = 0; i < partNum; i++)
     {
         for (int j = 0; j < partNum; j++)
         {
-            info[i][j] = value;
-            info[j][i] = value;
+            info[i][j] = allDistance[i][j];
+            info[j][i] = allDistance[j][i];
             if (i != j)
             {
-                visible[i][j] = testData[j].getArea() / totalCost + 1 / allDistance[i][j]; //这里有使用allDistance初始化
+                visible[i][j] = testData[j].getArea(); //这里有使用allDistance初始化
             }
         }
     }
@@ -43,12 +42,17 @@ void AntColonySystem::InitParameter(double value, CPart testData[partNum], doubl
 //全局信息素更新
 void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue) //fix:此函数要改，入炉序列生成后根据时间调整
 {
+    for(int i=0;i<partNum;i++)
+    {
+        for(int j=0;j<partNum;j++)
+            info[i][j]*=(1-rou); //挥发
+    }
+
     for (int i = 0; i < partNum; i++)
     {
         int row = *(bestTour + 2 * i);
         int col = *(bestTour + 2 * i + 1);
-        info[row][col] += /*(1.0 - rou) * info[row][col] +*/ rou * 1 / (totalCost - gloalbestValue); //耗散去掉了，只给最优路径中节点增加
-        //info[col][row] = info[row][col]; //fix:需要去掉
+        info[row][col] += rou * gloalbestValue; //只给最优路径中节点增加
     }
 }
 

@@ -20,7 +20,7 @@ public:
     //局部更新规则
     void UpdateLocalPathRule(int i, int j);
     //初始化
-    void InitParameter(double value, CPart testData[], double allDistance[][partNum]);
+    void InitParameter(CPart testData[], double allDistance[][partNum]);
     //全局信息素更新
     void UpdateGlobalPathRule(int *bestTour, int gloalbestValue);
 };
