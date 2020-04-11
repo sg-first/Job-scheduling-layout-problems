@@ -13,8 +13,6 @@ class AntColonySystem
 private:
     double info[partNum][partNum], visible[partNum][partNum];//节点之间的信息素强度,节点之间的能见度
 public:
-    //每个节点都可能作为源节点来遍历
-    static double totalCost;
     //计算当前节点到下一节点转移的概率
     double Transition(int i, int j);
     //局部更新规则

@@ -41,37 +41,6 @@ int ChooseNextNode(int currentNode, int visitedNode[],double allDistance[partNum
 	return nextNode;
 }
 
-//给一个节点由最近邻距离方法计算长度
-double CalAdjacentDistance(int node, caluDist &cd) //sumCost就是totalCost
-{
-    double sumCost = 0;
-    int visitedNode[partNum];
-    for (int j = 0; j < partNum; j++)
-	{
-		visitedNode[j] = 1;
-	}
-	visitedNode[node] = 0;
-	int currentNode = node;
-	int nextNode;
-	do
-	{
-        nextNode = ChooseNextNode(currentNode, visitedNode, cd.allDistance);
-		if (nextNode >= 0)
-		{
-            //sum += cd.allDistance[currentNode][nextNode] - cd.allDistance[currentNode][currentNode];
-            sumCost += cd.testData[currentNode].getArea(); //fix: 改成截止日期
-			currentNode = nextNode;
-			visitedNode[currentNode] = 0;
-		}
-	} while (nextNode >= 0);
-    //sum += cd.allDistance[currentNode][node] - cd.allDistance[currentNode][currentNode];
-
-	//sumCost += C[currentNode][1];
-    sumCost += cd.testData[currentNode].getArea();
-    return sumCost;
-}
-//---------------------------------结束---------------------------------------------
-
 //--------------------------主函数--------------------------------------------------
 int main()
 {
@@ -103,8 +72,6 @@ int main()
         cd.calculateAllWeight();
 		//随机选择一个节点计算由最近邻方法得到的一个长度
         int node = rand() % partNum;
-
-        AntColonySystem::totalCost = CalAdjacentDistance(node,cd);
 
 		//各条路径上初始化的信息素强度
         acs->InitParameter(cd.testData,cd.allDistance);

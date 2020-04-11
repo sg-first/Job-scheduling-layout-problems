@@ -15,11 +15,6 @@ double RND(double dbLow, double dbUpper)//产生随机数
 	return (dbUpper - dbLow) * rand() / ((double)RAND_MAX + 1.0) + dbLow;
 }
 
-/*int min(int a, int b)
-{
-	return a < b ? a : b;
-}*/
-
 void CLayout::Init(double dAreaWidth, double dAreaHeight, double dAreaWeight,int nPartsAmount)
 {
 	this->m_dWidth = dAreaWidth;
@@ -37,7 +32,7 @@ void CLayout::Init(double dAreaWidth, double dAreaHeight, double dAreaWeight,int
 	this->nPartsAmount = nPartsAmount;
 }
 
-int CLayout::CanBePutIn(CPart Part)//这里没有考虑可用空间为0的情况
+int CLayout::CanBePutIn(CPart Part)
 {
 	//-1转置 1不转置 0不能放入
 	if (m_dWeightLeft < Part.getWeight() || m_lstAvailable.empty())
@@ -538,7 +533,7 @@ double CLayout::Calculate(int* tour,CPart* Part)
 			//cout << "Calculate PartNo " << nPartNo << endl;
 			if (Part[nPartNo].getSurplusAmount() > 0)
 			{
-				nCanBePutIn = CanBePutIn(Part[nPartNo]);
+                nCanBePutIn = CanBePutIn(Part[nPartNo]); //除了tour长度之外的约束
 				bPartExist = true;
 				int nPutInAmount = 0;
 				if (nCanBePutIn != 0)
@@ -547,24 +542,6 @@ double CLayout::Calculate(int* tour,CPart* Part)
 					if (nCanBePutIn == -1) bTrans = true;
 					bUseless = false;
 					break;
-					//cout << "能否放入标志 " << nCanBePutIn << endl;
-					//nPutInAmount = PutIn(Part[nPartNo], bTrans);
-					/*if (nPutInAmount == 0)
-					{
-						cout << "Calculate AvailBegin X " << itAvail->getX() << " Y " << itAvail->getY() << " Height " << itAvail->getHeight() << " Width " << itAvail->getWidth() << endl;
-						cout << "Calculate Part H" << Part[nPartNo].getHeight() << " W " << Part[nPartNo].getWidth() << endl;
-						CanBePutIn(Part[nPartNo]);
-						cout << "转置标志 " << nCanBePutIn << endl;
-						PutIn(Part[nPartNo], bTrans);
-						system("pause");
-					}
-					if (nPutInAmount != 0)
-					{
-						bUseless = false;
-						//cout << "Calculate CanPutIn" << endl;
-						break;//找到第一个待排零件
-					}*/
-					
 				}
 			}
 		}
@@ -593,85 +570,6 @@ double CLayout::Calculate(int* tour,CPart* Part)
 	} while (!m_lstAvailable.empty() && bPartExist);
 	return m_dUsedArea;
 }
-
-/*double CLayout::Calculate(int* tour, CPart* Part)
-{
-	int nPartNo;//零件编号
-	while (!m_lstAvailable.empty())
-	{
-		for (int i = 0; i < nPartsAmount; i++)
-		{
-			nPartNo = *(tour + i);
-			this->Merge();
-			//cout << "Calculate After Merge" << endl;
-			if (m_lstAvailable.empty()) return m_dUsedArea;
-			list<CAreaList>::iterator itAvail = m_lstAvailable.begin();
-			int nCanBePutIn = CanBePutIn(Part[nPartNo]);
-			int nPutInAmount = 0;
-			if (nCanBePutIn != 0)
-			{
-				nPutInAmount = PutIn(Part[nPartNo], nCanBePutIn);
-				//cout << "PutIn Part " << nPartNo << " PartAmount " << Part[nPartNo].getSurplusAmount() << endl;
-			}
-			if (nPutInAmount == 0)
-			{
-				bool bUseless = true;
-				for (int j = i + 1; j < nPartsAmount; j++)
-				{
-					nPartNo = *(tour + j);
-					nCanBePutIn = CanBePutIn(Part[nPartNo]);
-					if (nCanBePutIn != 0)
-					{
-						bUseless = false;
-						break;
-					}
-				}
-				if (bUseless)
-				{
-					CAreaList tmpArea;
-					tmpArea.setX(itAvail->getX());
-					tmpArea.setY(itAvail->getY());
-					tmpArea.setWidth(itAvail->getWidth());
-					tmpArea.setHeight(itAvail->getHeight());
-					m_lstUseless.push_back(tmpArea);
-					m_lstAvailable.pop_front();
-				}
-			}
-		}
-	}
-	
-	return m_dUsedArea;
-}*/
-
-
-/*void CLayout::showLayoutList()
-{      
-	auto itLayoutList = m_lstLayout.begin();
-	int grapWidth = 400, grapHeight = 400;
-	initgraph(grapWidth, grapHeight);
-	int panelWidth = 200, panelHeight = 200;  //一个平板车尺寸
-	CRectangle panel(0, 0, panelWidth, panelHeight, grapWidth, grapHeight); //创建平板车对象
-	int tranX = 10, tranY = 10; //x轴和y轴的平移量
-	panel.draw(tranX, tranY); //画平板车
-	TCHAR s[3];
-	int i = 0;
-	for (; itLayoutList != m_lstLayout.end(); itLayoutList++)
-	{
-        CRectangle part(itLayoutList->getX(), itLayoutList->getY(), itLayoutList->getW(), itLayoutList->getH(), grapWidth, grapHeight);
-        part.draw(tranX, tranY);
-		//cout << "X: " << itLayoutList->getX() << " Y: " << itLayoutList->getY() << " H: " << itLayoutList->getH() << " W: " << itLayoutList->getW() << " ";
-		//cout << "Width: " << itLayoutList->getPart().getWidth() * itLayoutList->getHorizonAmount() << " Height: " << itLayoutList->getPart().getHeight() * itLayoutList->getVerticalAmount() << " HorizonAmount: " << itLayoutList->getHorizonAmount() << " VerticalAmount: " << itLayoutList->getVerticalAmount() << endl;
-		//swprintf_s(s, _T("%d"), itLayoutList->getPart().getID());
-		int Id = itLayoutList->getPart().getID();
-		swprintf_s(s, _T("%d"), Id);
-        outtextxy(tranX + part.leftX + part.length / 3, grapHeight - part.leftY - part.width/ 2 - tranY, s); //标注数字
-        //i++;
-	}
-	cout << "放入的布局数量 " << i << endl;
-	_getch();
-	// 关闭图形窗口
-	closegraph();
-}*/
 
 void CLayout::testMerge()
 {
