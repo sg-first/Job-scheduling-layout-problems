@@ -12,15 +12,15 @@ private:
 public:
 	CPart(double dWeight, double dHeight, double dWidth) :dWeight(dWeight), dHeight(dHeight), dWidth(dWidth) { dArea = dHeight * dWidth; }
 	CPart() {}
-	double getWeight() { return dWeight; }
-	double getHeight() { return dHeight; }
-	double getWidth() { return dWidth; }
-	double getArea() { return dArea; }
+    double getWeight() const { return dWeight; }
+    double getHeight() const { return dHeight; }
+    double getWidth() const { return dWidth; }
+    double getArea() const { return dArea; }
 	int getSurplusAmount() { return nSurplusAmount; }
 	void setInfo(double dWidth, double dHeight, double dWeight) { this->dWeight = dWeight; this->dWidth = dWidth; this->dHeight = dHeight;dArea = dHeight * dWidth; }
 	void setAmount(int amount) { this->nAmount = amount; this->nSurplusAmount = nAmount; }
 	void changeAmount(int nPutInAmount) { this->nSurplusAmount -= nPutInAmount; }//放入后修改剩余数量
 	void setId(int nId) { this->nId = nId; }
-	int getID() { return this->nId; }
+    int getID() const { return this->nId; }
 };
 

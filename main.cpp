@@ -42,10 +42,9 @@ int ChooseNextNode(int currentNode, int visitedNode[],double allDistance[partNum
 }
 
 //给一个节点由最近邻距离方法计算长度
-double CalAdjacentDistance(int node, double& sumCost, caluDist &cd) //sumCost就是totalCost
+double CalAdjacentDistance(int node, caluDist &cd) //sumCost就是totalCost
 {
-	double sum = 0.0;
-	sumCost = 0;
+    double sumCost = 0;
     int visitedNode[partNum];
     for (int j = 0; j < partNum; j++)
 	{
@@ -105,7 +104,7 @@ int main()
 		//随机选择一个节点计算由最近邻方法得到的一个长度
         int node = rand() % partNum;
 
-        AntColonySystem::totalVolume = CalAdjacentDistance(node, AntColonySystem::totalCost,cd);
+        AntColonySystem::totalCost = CalAdjacentDistance(node,cd);
 
 		//各条路径上初始化的信息素强度
         double initInfo = 1 / AntColonySystem::totalCost;      //1 / (N * totalVolume);

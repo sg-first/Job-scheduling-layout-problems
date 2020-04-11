@@ -1,7 +1,6 @@
 #include "ant.h"
 #include <math.h>
 
-double AntColonySystem::totalVolume;
 double AntColonySystem::totalCost;
 
 //计算当前节点到下一节点转移的概率
