@@ -1,6 +1,6 @@
 #pragma once
-//#include "List"
 #include "CPart.h"
+
 class CLayoutList
 {
 private:
@@ -9,10 +9,10 @@ private:
 	double w;//零件的宽 
 	double h;//零件的高 
 	double dWeightUsed;
-	int bTrans;//放置的时候是否转置
 	int nHorizonAmount;//横向个数
 	int nVerticalAmount;//纵向个数
 	CPart Part;
+
 public:
 	CLayoutList() {}
 	~CLayoutList() {}

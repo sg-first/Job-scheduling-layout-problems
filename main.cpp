@@ -88,23 +88,12 @@ int main()
 			double localBestValue = 0.0;
 			//当前路径长度
 			double tourCost;
-			double tourUtil = 0;
             for (int j = 0; j < antNum; j++) //每个蚂蚁行动
 			{
-				CLayout Layout;
-                Layout.Init(AreaWidth, AreaHeight, AreaWeight, partNum);
-                CPart testCopy[partNum];
-                for (int i = 0; i < partNum; i++)
-				{
-                    testCopy[i] = cd.testData[i];
-				}
+                CLayout Layout(AreaWidth, AreaHeight, AreaWeight);
+                array<CPart,partNum> testCopy=cd.testData; //对于每个蚂蚁，拷贝一次
 				int* tourPath = ants[j]->Search();
-                tourCost = cd.calculateSumOfDistance(tourPath, tourUtil);			//计算每个链的总价值和利用率
-				//tourCost = Layout.Calculate(tourPath, tourUtil, testCopy);		//计算每个链的总价值和利用率
-				//tourWeight = calculateSumOfWeight(tourPath, tourUtil2);//计算重量利用率
-				//cout << "Main: tourWeight: " << tourWeight << endl;
-				//局部比较，并记录路径和长度
-				//if ((tourCost > localBestValue || abs(localBestValue - 0.0) < 0.000001) && tourWeight <= CON_WEIGHT)
+                tourCost = cd.calculateSumOfDistance(tourPath, testCopy,Layout); //计算每个链的总价值和利用率
 				if (tourCost > localBestValue || abs(localBestValue - 0.0) < 0.000001)
 				{
 					//cout << "Main: tourWeight: " << tourWeight << endl;
@@ -145,8 +134,7 @@ int main()
         cout << "Loading result:";
 		double sum = 0;
 		double sumWeight = 0;
-		CLayout Layout;
-        Layout.Init(AreaWidth, AreaHeight, AreaWeight, partNum);
+        CLayout Layout(AreaWidth, AreaHeight, AreaWeight);
         CPart copyData[partNum];//将原始数据复制到里面，不然放入的时候会改变零件的数量
         for (int i = 0; i < partNum; i++)
 		{

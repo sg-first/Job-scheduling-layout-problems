@@ -1,15 +1,11 @@
 #pragma once
 #include "CPart.h"
 #include "CLayout.h"
+#include <array>
 
-const int partNum=17;
-
-//the max coat is 1153 total weight = 499 (the optimal solution = 1153)
 const int AreaWidth = 200;
 const int AreaHeight = 200;
 const int AreaWeight = 2000;
-const int CON_VOLUME = AreaWidth*AreaHeight ;  //背包的容积 这里当做面积
-const int CON_WEIGHT = AreaWeight;//重量
 
 class caluDist
 {
@@ -42,7 +38,7 @@ public:
     }
 
     //测试数据
-    CPart testData[partNum];
+    array<CPart,partNum> testData;
     void InitTestPart()
     {
         for (int i = 0; i < partNum; i++)
@@ -54,7 +50,7 @@ public:
             //cout << "Weight: " << C[i][2] << endl;
             testData[i].setInfo(width, height, weight);
             testData[i].setAmount(1);
-            testData->setId(i);
+            testData[i].setId(i);
             //cout << "Weight: " << testData[i].getWeight() << endl;
         }
     }
@@ -113,20 +109,8 @@ public:
     }
 
     //获得经过n个结点的路径得到的总体积
-    double calculateSumOfDistance(int* tour, double& utilization)
+    double calculateSumOfDistance(int *tour, array<CPart,partNum> &allPart, CLayout &Layout)
     {
-        double sumVolume = 0;
-        double sumCost = 0;
-        CLayout Layout;
-        Layout.Init(AreaWidth, AreaHeight, AreaWeight,partNum);
-        CPart copyData[partNum];//将原始数据复制到里面，不然放入的时候会改变零件的数量
-        for (int i = 0; i < partNum; i++)
-        {
-            copyData[i] = testData[i];
-        }
-        sumCost = Layout.Calculate(tour, copyData);
-        //cout << "Calculate: sumCost: " << sumCost << endl;
-        utilization = sumVolume / CON_VOLUME;
-        return sumCost;
+        return Layout.Calculate(tour, allPart);
     }
 };

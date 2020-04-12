@@ -20,7 +20,7 @@ void AntColonySystem::UpdateLocalPathRule(int i, int j)
     info[i][j] = (1.0 - alpha1) * info[i][j];
 }
 //初始化
-void AntColonySystem::InitParameter(CPart testData[partNum], double allDistance[partNum][partNum])
+void AntColonySystem::InitParameter(array<CPart,partNum> testData, double allDistance[partNum][partNum])
 {
     //初始化路径上的信息素强度tao0
     for (int i = 0; i < partNum; i++)
