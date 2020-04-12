@@ -14,10 +14,6 @@ using namespace std;
 class CLayout
 {
 private:
-    const double m_dHeight;
-    const double m_dWidth;
-    const double m_dWeight; //重量
-    const double m_dVolume;
     double m_dWeightLeft; //重量剩余
 	double m_dUsedArea;
 	list<CAreaList> m_lstAvailable;
@@ -25,6 +21,11 @@ private:
 	list<CLayoutList> m_lstLayout;
 
 public:
+    const double m_dHeight;
+    const double m_dWidth;
+    const double m_dWeight; //重量
+    const double m_dVolume; //体积
+
     CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight);//初始化区域
     int CanBePutIn(CPart Part);
 	int PutIn(CPart& Part, bool bTrans);//返回装入的数量 引用为了修改零件的剩余重量

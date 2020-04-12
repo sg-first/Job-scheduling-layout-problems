@@ -149,7 +149,7 @@ int main()
 		}
 		sum=Layout.Calculate(tour, copyData);
 		cout << endl;
-        cout << "Total volume:" << sum << " Utilization ratio:" << sum / CON_VOLUME << endl;
+        cout << "Total volume:" << sum << " Utilization ratio:" << sum /Layout.m_dVolume  << endl;
         cout << "Total weight:" << sumWeight << endl;
 		time(&timerl);
 		double t = timerl - timer;
