@@ -5,9 +5,13 @@
 #include "CPart.h"
 #include "CRectangle.h"
 #include <list>
+#include <vector>
 #include <array>
 
 const int partNum=17;
+const int stoveNum=1;
+
+typedef vector<array<int,2> > tourType;
 
 using namespace std;
 
@@ -32,7 +36,7 @@ public:
 	double UpdateList(double dWidth, double dHeight, int nHorizonAmount, int nVerticalAmount, CPart Part, double dWeight);
 	void Merge();
 	void FindUseless(CPart* data);
-    double Calculate(int *tour, array<CPart, partNum> &Part);
+    double Calculate(tourType tour, vector<CPart> &Part);
 	list<CAreaList>::iterator getAvaliableBegin() { return m_lstAvailable.begin(); }
 	list<CAreaList>::iterator getAvaliableEnd() { return m_lstAvailable.end(); }
 	void testMerge();

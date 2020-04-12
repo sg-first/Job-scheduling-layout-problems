@@ -501,7 +501,7 @@ void CLayout::Merge()
 
 }*/
 
-double CLayout::Calculate(int *tour, array<CPart,partNum> &Part)
+double CLayout::Calculate(tourType tour, vector<CPart> &Part)
 {
     CAreaList tmpArea;
     int nPartNo;//零件编号
@@ -514,18 +514,11 @@ double CLayout::Calculate(int *tour, array<CPart,partNum> &Part)
     do
     {
         itAvail = m_lstAvailable.begin();
-        /*if (!m_lstAvailable.empty())
-        {
-            Merge(); //合并空间
-            //cout << "Calculate MergeEnd" << endl;
-        }*/
-        //cout << "Calculate AvailBegin X " << itAvail->getX() << " Y " << itAvail->getY() << " Height " << itAvail->getHeight() << " Width " << itAvail->getWidth() << endl;
         bUseless = true;
         bPartExist = false;
-        for (int i=0;i<partNum;i++)
+        for (int i=0;i<Part.size();i++)
         {
-            nPartNo = tour[i];
-            //cout << "Calculate PartNo " << nPartNo << endl;
+            nPartNo = tour[i][0];
             if (Part[nPartNo].getSurplusAmount() > 0)
             {
                 nCanBePutIn = CanBePutIn(Part[nPartNo]); //除了tour长度之外的约束

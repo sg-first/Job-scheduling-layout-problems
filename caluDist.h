@@ -2,6 +2,7 @@
 #include "CPart.h"
 #include "CLayout.h"
 #include <array>
+#include <vector>
 
 const int AreaWidth = 200;
 const int AreaHeight = 200;
@@ -25,35 +26,43 @@ private:
     {
         int max=getMaxDeadLine();
         for (int i = 0; i < partNum; i++)
-            this->C[i][4]=max-this->C[i][4];
+            this->C[i][4]=max-this->C[i][4]; //fix:这里应该按面积排一下
     }
 
 public:
     double (*C)[3];
+    vector<CLayout*> allStove;
 
-    caluDist(double C[partNum][3])
+    caluDist(double C[partNum][3], double D[stoveNum][3])
     {
         this->C=C;
-        this->InitTestPart();
+        //初始化零件
+        for (int i = 0; i < partNum; i++)
+        {
+            double width = C[i][0];
+            double height = C[i][1];
+            double weight = 1; //fix:
+            CPart part(weight, width, height);
+            part.setAmount(1);
+            part.setId(i);
+            this->testData.push_back(part);
+        }
+        //初始化炉子
+        for(int i=0;i<stoveNum;i++)
+        {
+            auto Di=D[i];
+            this->allStove.push_back(new CLayout(Di[0],Di[1],Di[2]));
+        }
+    }
+
+    ~caluDist()
+    {
+        for(auto i : this->allStove)
+            delete i;
     }
 
     //测试数据
-    array<CPart,partNum> testData;
-    void InitTestPart()
-    {
-        for (int i = 0; i < partNum; i++)
-        {
-            double weight, width, height;
-            width = C[i][0];
-            height = C[i][1];
-            weight = 1;
-            //cout << "Weight: " << C[i][2] << endl;
-            testData[i].setInfo(width, height, weight);
-            testData[i].setAmount(1);
-            testData[i].setId(i);
-            //cout << "Weight: " << testData[i].getWeight() << endl;
-        }
-    }
+    vector<CPart> testData;
 
     //矩阵表示两两结点之间的体积
     double allDistance[partNum][partNum];
@@ -109,7 +118,7 @@ public:
     }
 
     //获得经过n个结点的路径得到的总体积
-    double calculateSumOfDistance(int *tour, array<CPart,partNum> &allPart, CLayout &Layout)
+    double calculateSumOfDistance(tourType tour, vector<CPart> &allPart, CLayout &Layout)
     {
         return Layout.Calculate(tour, allPart);
     }

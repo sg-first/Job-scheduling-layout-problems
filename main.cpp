@@ -6,9 +6,10 @@
 #include <time.h>
 #include <ctype.h>
 #include <iostream>
+#include <vector>
 
 //最大循环次数NcMax
-int NcMax = 500;
+const int NcMax = 500;
 
 //===========================================================================================================
 //局部更新时候使用的的常量，它是由最近邻方法得到的一个长度
@@ -46,7 +47,8 @@ int main()
 {
     //初始数据
     double C[partNum][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1},{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,1},{36,15,1},{17,29,1},{19,54,1},{146,25,1} };
-    caluDist cd(C); //包含初始化测试数据
+    double D[stoveNum][3] = { {200,200,2000} };
+    caluDist cd(C,D); //包含初始化测试数据
 
     int start = 1;
 	if (start)
@@ -76,49 +78,43 @@ int main()
 		//各条路径上初始化的信息素强度
         acs->InitParameter(cd.testData,cd.allDistance);
 
-		//全局最优路径
-        int globalTour[partNum][2];
+        //全局最优布局
+        CLayout *globalLayout=nullptr;
+        tourType globalTour;
 		//全局最优长度
 		double gloalbestValue = 0.0;
 		for (int i = 0; i < NcMax; i++)
 		{
-			//局部最优路径
-            int localTour[partNum][2];
+            //局部最优布局
+            CLayout *localLayout=nullptr;
+            tourType localTour;
 			//局部最优长度
 			double localBestValue = 0.0;
 			//当前路径长度
 			double tourCost;
             for (int j = 0; j < antNum; j++) //每个蚂蚁行动
 			{
-                CLayout Layout(AreaWidth, AreaHeight, AreaWeight);
-                array<CPart,partNum> testCopy=cd.testData; //对于每个蚂蚁，拷贝一次
-				int* tourPath = ants[j]->Search();
+                CLayout Layout=*cd.allStove[0];
+                vector<CPart> testCopy=cd.testData; //对于每个蚂蚁，拷贝一次
+                tourType tourPath = ants[j]->Search();
                 tourCost = cd.calculateSumOfDistance(tourPath, testCopy,Layout); //计算每个链的总价值和利用率
-				if (tourCost > localBestValue || abs(localBestValue - 0.0) < 0.000001)
+                if (tourCost > localBestValue || abs(localBestValue - 0.0) < 0.000001) //是局部最好的
 				{
-					//cout << "Main: tourWeight: " << tourWeight << endl;
-                    for (int m = 0; m < partNum; m++)
-					{
-						int row = *(tourPath + 2 * m);
-						int col = *(tourPath + 2 * m + 1);
-						localTour[m][0] = row;
-						localTour[m][1] = col;
-					}
+                    delete localLayout;
+                    localLayout=new CLayout(Layout);
+                    localTour=tourPath;
 					localBestValue = tourCost;
 				}
 			}
-			//全局比较，并记录路径和长度
-			//if ((localBestValue > gloalbestValue || abs(gloalbestValue - 0.0) < 0.000001) && tourWeight <= CON_WEIGHT)
+            //全局比较，并记录最优布局
 			if (localBestValue > gloalbestValue || abs(gloalbestValue - 0.0) < 0.000001)
 			{
-                for (int m = 0; m < partNum; m++)
-				{
-					globalTour[m][0] = localTour[m][0];
-					globalTour[m][1] = localTour[m][1];
-				}
+                delete globalLayout;
+                globalLayout=localLayout; //之前已经new过不用拷贝了
+                globalTour=localTour;
 				gloalbestValue = localBestValue;
 			}
-			acs->UpdateGlobalPathRule(*globalTour, gloalbestValue);
+            acs->UpdateGlobalPathRule(globalTour, gloalbestValue);
 			//输出所有蚂蚁循环一次后的迭代最优路径
             cout << "Iterative optimal path " << i + 1 << localBestValue << "." << endl;
             for (int m = 0; m < partNum; m++)
@@ -133,24 +129,11 @@ int main()
 
         cout << "Loading result:";
 		double sum = 0;
-		double sumWeight = 0;
         CLayout Layout(AreaWidth, AreaHeight, AreaWeight);
-        CPart copyData[partNum];//将原始数据复制到里面，不然放入的时候会改变零件的数量
-        for (int i = 0; i < partNum; i++)
-		{
-            copyData[i] = cd.testData[i];
-		}
-
-        int tour[partNum];
-        for (int i = 0; i < partNum; i++)
-		{
-			tour[i] = globalTour[i][0];
-			copyData[i].setId(i);
-		}
-		sum=Layout.Calculate(tour, copyData);
+        sum=Layout.Calculate(globalTour, cd.testData); //fix:直接用getSum替换
 		cout << endl;
         cout << "Total volume:" << sum << " Utilization ratio:" << sum /Layout.m_dVolume  << endl;
-        cout << "Total weight:" << sumWeight << endl;
+        //cout << "Total weight:" << sumWeight << endl;
 		time(&timerl);
 		double t = timerl - timer;
 		//cout << testData[globalTour[0][0]].getHeight() << " " << testData[globalTour[0][0]].getWidth() << endl;

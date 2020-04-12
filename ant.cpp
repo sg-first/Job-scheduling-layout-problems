@@ -20,7 +20,7 @@ void AntColonySystem::UpdateLocalPathRule(int i, int j)
     info[i][j] = (1.0 - alpha1) * info[i][j];
 }
 //初始化
-void AntColonySystem::InitParameter(array<CPart,partNum> testData, double allDistance[partNum][partNum])
+void AntColonySystem::InitParameter(vector<CPart> testData, double allDistance[partNum][partNum])
 {
     //初始化路径上的信息素强度tao0
     for (int i = 0; i < partNum; i++)
@@ -38,7 +38,7 @@ void AntColonySystem::InitParameter(array<CPart,partNum> testData, double allDis
 }
 
 //全局信息素更新
-void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue) //fix:此函数要改，入炉序列生成后根据时间调整
+void AntColonySystem::UpdateGlobalPathRule(tourType bestTour, int gloalbestValue) //fix:此函数要改，入炉序列生成后根据时间调整
 {
     for(int i=0;i<partNum;i++)
     {
@@ -48,8 +48,8 @@ void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue) //
 
     for (int i = 0; i < partNum; i++)
     {
-        int row = *(bestTour + 2 * i);
-        int col = *(bestTour + 2 * i + 1);
+        int row = bestTour[i][0];
+        int col = bestTour[i][1];
         info[row][col] += rou * gloalbestValue; //只给最优路径中节点增加
     }
 }
@@ -57,7 +57,7 @@ void AntColonySystem::UpdateGlobalPathRule(int* bestTour, int gloalbestValue) //
 
 
 //开始搜索
-int* ACSAnt::Search()
+tourType ACSAnt::Search()
 {
     currentNode = startNode;
     int toNode;
@@ -84,7 +84,7 @@ int* ACSAnt::Search()
     MoveToNextNode(startNode);
     antColony->UpdateLocalPathRule(endNode, startNode);
 
-    return *Tour;
+    return Tour;
 }
 
 //选择下一节点

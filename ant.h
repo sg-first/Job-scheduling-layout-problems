@@ -18,9 +18,9 @@ public:
     //局部更新规则
     void UpdateLocalPathRule(int i, int j);
     //初始化
-    void InitParameter(array<CPart, partNum> testData, double allDistance[][partNum]);
+    void InitParameter(vector<CPart> testData, double allDistance[][partNum]);
     //全局信息素更新
-    void UpdateGlobalPathRule(int *bestTour, int gloalbestValue);
+    void UpdateGlobalPathRule(tourType bestTour, int gloalbestValue);
 };
 
 
@@ -31,16 +31,19 @@ private:
 protected:
     int startNode, currentNode;//初始节点编号，当前节点编号
     int allowed[partNum];//禁忌表
-    int Tour[partNum][2];//当前路径
+    tourType Tour;//当前路径
     int currentTourIndex;//当前路径索引，从0开始，存储蚂蚁经过城市的编号
 public:
     ACSAnt(AntColonySystem* acs, int start)
     {
         antColony = acs;
         startNode = start;
+        //初始化Tour
+        for(int i=0;i<partNum;i++)
+            Tour.push_back({0,0});
     }
     //开始搜索
-    int* Search();
+    tourType Search();
     //选择下一节点
     int Choose();
     //移动到下一节点
