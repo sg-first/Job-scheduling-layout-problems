@@ -1,4 +1,4 @@
-﻿#include "CLayout.h"
+#include "CLayout.h"
 #include <algorithm>
 #include <iostream>
 #include "caluDist.h"
@@ -23,6 +23,7 @@ CLayout::CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight) :
     tmpArea.setWidth(dAreaWidth);
     tmpArea.setX(0.0);
     tmpArea.setY(0.0);
+    cout<<tmpArea.getHeight()<<" "<<tmpArea.getWidth()<<endl;
     this->m_lstAvailable.push_back(tmpArea);
     m_dUsedArea = 0;
 }
@@ -557,6 +558,17 @@ double CLayout::Calculate(tourType tour, vector<CPart> &Part)
         //cout << "After Tour" << endl;
     } while (!m_lstAvailable.empty() && bPartExist);
     return m_dUsedArea;
+}
+
+double CLayout::getSum()
+{
+    double sum=0;
+    list<CLayoutList>::iterator itLayout=m_lstLayout.begin();
+    for(;itLayout!=m_lstLayout.end();itLayout++)
+    {
+        sum+=itLayout->getW()*itLayout->getH();
+    }
+    return sum;
 }
 
 void CLayout::testMerge()
