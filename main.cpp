@@ -1,4 +1,4 @@
-﻿#include "CPart.h"
+#include "CPart.h"
 #include "CAreaList.h"
 #include "CLayoutList.h"
 #include "CLayout.h"
@@ -49,7 +49,6 @@ int main()
     double C[partNum][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1},{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,1},{36,15,1},{17,29,1},{19,54,1},{146,25,1} };
     double D[stoveNum][3] = { {200,200,2000} };
     caluDist cd(C,D); //包含初始化测试数据
-
     int start = 1;
 	if (start)
 	{
@@ -130,7 +129,8 @@ int main()
         cout << "Loading result:";
 		double sum = 0;
         CLayout Layout(AreaWidth, AreaHeight, AreaWeight);
-        sum=Layout.Calculate(globalTour, cd.testData); //fix:直接用getSum替换
+        //sum=Layout.Calculate(globalTour, cd.testData); //fix:直接用getSum替换
+        sum=globalLayout->getSum();
 		cout << endl;
         cout << "Total volume:" << sum << " Utilization ratio:" << sum /Layout.m_dVolume  << endl;
         //cout << "Total weight:" << sumWeight << endl;
@@ -138,10 +138,13 @@ int main()
 		double t = timerl - timer;
 		//cout << testData[globalTour[0][0]].getHeight() << " " << testData[globalTour[0][0]].getWidth() << endl;
         //Layout.showLayoutList();
-		cout << Layout.AvailSize() << endl;
-        cout << "Number of parts:" << Layout.getLayoutListSize() << endl;
+        //cout << Layout.AvailSize() << endl;
+        cout<<globalLayout->AvailSize()<<endl;
+        //cout << "Number of parts:" << Layout.getLayoutListSize() << endl;
+        cout << "Number of parts:" << globalLayout->getLayoutListSize() << endl;
         cout << "time:" << t << endl;
-		Layout.showLayoutPartNo();
+        //Layout.showLayoutPartNo();
+        globalLayout->showLayoutPartNo();
 		//initgraph(640, 480);
 		//setorigin(0,0);
 		return 0;
