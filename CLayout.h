@@ -18,7 +18,7 @@ using namespace std;
 class CLayout
 {
 private:
-    double m_dWeightLeft; //ÖØÁ¿Ê£Óà
+    double m_dWeightLeft; //é‡é‡å‰©ä½™
 	double m_dUsedArea;
 	list<CAreaList> m_lstAvailable;
 	list<CAreaList> m_lstUseless;
@@ -27,12 +27,12 @@ private:
 public:
     const double m_dHeight;
     const double m_dWidth;
-    const double m_dWeight; //ÖØÁ¿
-    const double m_dVolume; //Ìå»ı
+    const double m_dWeight; //é‡é‡
+    const double m_dVolume; //ä½“ç§¯
 
-    CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight);//³õÊ¼»¯ÇøÓò
+    CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight);//åˆå§‹åŒ–åŒºåŸŸ
     int CanBePutIn(CPart Part);
-	int PutIn(CPart& Part, bool bTrans);//·µ»Ø×°ÈëµÄÊıÁ¿ ÒıÓÃÎªÁËĞŞ¸ÄÁã¼şµÄÊ£ÓàÖØÁ¿
+	int PutIn(CPart& Part, bool bTrans);//è¿”å›è£…å…¥çš„æ•°é‡ å¼•ç”¨ä¸ºäº†ä¿®æ”¹é›¶ä»¶çš„å‰©ä½™é‡é‡
 	double UpdateList(double dWidth, double dHeight, int nHorizonAmount, int nVerticalAmount, CPart Part, double dWeight);
 	void Merge();
 	void FindUseless(CPart* data);
@@ -44,5 +44,6 @@ public:
 	void showLayoutPartNo();
 	int getLayoutListSize() { return this->m_lstLayout.size(); }
 	int AvailSize() { return m_lstAvailable.size(); }
+    double getSum();
 };
 
