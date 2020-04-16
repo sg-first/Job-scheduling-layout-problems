@@ -3,6 +3,7 @@
 #include "CLayout.h"
 #include <array>
 #include <vector>
+#include<algorithm>
 
 const int AreaWidth = 200;
 const int AreaHeight = 200;
@@ -26,7 +27,7 @@ private:
     {
         int max=getMaxDeadLine();
         for (int i = 0; i < partNum; i++)
-            this->C[i][4]=max-this->C[i][4]; //fix:ÕâÀïÓ¦¸Ã°´Ãæ»ıÅÅÒ»ÏÂ
+            this->C[i][4]=max-this->C[i][4]; //fix:è¿™é‡Œåº”è¯¥æŒ‰é¢ç§¯æ’ä¸€ä¸‹
     }
 
 public:
@@ -36,23 +37,24 @@ public:
     caluDist(double C[partNum][3], double D[stoveNum][3])
     {
         this->C=C;
-        //³õÊ¼»¯Áã¼ş
+        //åˆå§‹åŒ–é›¶ä»¶
         for (int i = 0; i < partNum; i++)
         {
             double width = C[i][0];
             double height = C[i][1];
-            double weight = 1; //fix:
-            CPart part(weight, width, height);
+            double weight = 1; //fix:æ”¹æˆå®é™…é‡é‡
+            CPart part(weight, width, height, i);
             part.setAmount(1);
-            part.setId(i);
             this->testData.push_back(part);
         }
-        //³õÊ¼»¯Â¯×Ó
+        //åˆå§‹åŒ–ç‚‰å­
         for(int i=0;i<stoveNum;i++)
         {
             auto Di=D[i];
             this->allStove.push_back(new CLayout(Di[0],Di[1],Di[2]));
         }
+        sort(this->allStove.begin(), this->allStove.end(),
+             [](CLayout* &a, CLayout* &b){ return a->getArea() > b->getArea(); }); //é™åºæ’åˆ—
     }
 
     ~caluDist()
@@ -61,14 +63,14 @@ public:
             delete i;
     }
 
-    //²âÊÔÊı¾İ
+    //æµ‹è¯•æ•°æ®
     vector<CPart> testData;
 
-    //¾ØÕó±íÊ¾Á½Á½½áµãÖ®¼äµÄÌå»ı
+    //çŸ©é˜µè¡¨ç¤ºä¸¤ä¸¤ç»“ç‚¹ä¹‹é—´çš„ä½“ç§¯
     double allDistance[partNum][partNum];
     double allWeight[partNum][partNum];
 
-    //¼ÆËãÁ½¸ö»õÎïµÄÀÛ¼ÓÌå»ı
+    //è®¡ç®—ä¸¤ä¸ªè´§ç‰©çš„ç´¯åŠ ä½“ç§¯
     double calculateDistance(int i, int j)
     {
         //return (C[i][0] + C[j][0]);
@@ -81,7 +83,7 @@ public:
         return testData[i].getWeight() + testData[j].getWeight();
     }
 
-    //ÓÉ¾ØÕó±íÊ¾Á½Á½»õÎïÖ®¼äµÄÌå»ı ÕâÀï¸ÄÍêÖ®ºóÓ¦¸ÃÊÇÃæ»ı
+    //ç”±çŸ©é˜µè¡¨ç¤ºä¸¤ä¸¤è´§ç‰©ä¹‹é—´çš„ä½“ç§¯ è¿™é‡Œæ”¹å®Œä¹‹ååº”è¯¥æ˜¯é¢ç§¯
     void calculateAllDistance()
     {
         for (int i = 0; i < partNum; i++)
@@ -90,7 +92,7 @@ public:
             {
                 if (i != j)
                 {
-                    allDistance[i][j] = testData[j].getArea(); //fix:¸Ä³É½ØÖ¹ÈÕÆÚ
+                    allDistance[i][j] = testData[j].getArea(); //fix:æ”¹æˆæˆªæ­¢æ—¥æœŸ
                     allDistance[j][i] = testData[i].getArea();
                 }
                 else
@@ -98,7 +100,7 @@ public:
             }
         }
     }
-    //ÓÉ¾ØÕó±íÊ¾Á½Á½»õÎïÖ®¼äµÄÖØÁ¿
+    //ç”±çŸ©é˜µè¡¨ç¤ºä¸¤ä¸¤è´§ç‰©ä¹‹é—´çš„é‡é‡
     void calculateAllWeight()
     {
         for (int i = 0; i < partNum; i++)
@@ -117,7 +119,7 @@ public:
         }
     }
 
-    //»ñµÃ¾­¹ın¸ö½áµãµÄÂ·¾¶µÃµ½µÄ×ÜÌå»ı
+    //è·å¾—ç»è¿‡nä¸ªç»“ç‚¹çš„è·¯å¾„å¾—åˆ°çš„æ€»ä½“ç§¯
     double calculateSumOfDistance(tourType tour, vector<CPart> &allPart, CLayout &Layout)
     {
         return Layout.Calculate(tour, allPart);

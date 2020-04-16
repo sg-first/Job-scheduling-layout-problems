@@ -15,4 +15,5 @@ HEADERS += \
     CPart.h \
     CRectangle.h \
     ant.h \
-    caluDist.h
+    caluDist.h \
+    solution.h

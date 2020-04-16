@@ -1,9 +1,9 @@
 #pragma once
 #include "caluDist.h"
 
-//ĞÅÏ¢Æô·¢Òò×Ó£¬ÆÚÍûÆô·¢Ê½Òò×Ó£¬È«¾ÖĞÅÏ¢ËØ»Ó·¢²ÎÊı£¬¾Ö²¿ĞÅÏ¢ËØ»Ó·¢²ÎÊı, ×´Ì¬×ªÒÆ¹«Ê½ÖĞµÄq0
+//ä¿¡æ¯å¯å‘å› å­ï¼ŒæœŸæœ›å¯å‘å¼å› å­ï¼Œå…¨å±€ä¿¡æ¯ç´ æŒ¥å‘å‚æ•°ï¼Œå±€éƒ¨ä¿¡æ¯ç´ æŒ¥å‘å‚æ•°, çŠ¶æ€è½¬ç§»å…¬å¼ä¸­çš„q0
 const double alpha = 2, beta = 4, rou = 0.6, alpha1 = 0.1, qzero = 0.01; //these parameters produce the best solution
-//ÂìÒÏÊıÁ¿
+//èš‚èšæ•°é‡
 const int antNum=15;
 
 class ACSAnt;
@@ -11,16 +11,16 @@ class ACSAnt;
 class AntColonySystem
 {
 private:
-    double info[partNum][partNum], visible[partNum][partNum];//½ÚµãÖ®¼äµÄĞÅÏ¢ËØÇ¿¶È,½ÚµãÖ®¼äµÄÄÜ¼û¶È
+    double info[partNum][partNum], visible[partNum][partNum];//èŠ‚ç‚¹ä¹‹é—´çš„ä¿¡æ¯ç´ å¼ºåº¦,èŠ‚ç‚¹ä¹‹é—´çš„èƒ½è§åº¦
 public:
-    //¼ÆËãµ±Ç°½Úµãµ½ÏÂÒ»½Úµã×ªÒÆµÄ¸ÅÂÊ
+    //è®¡ç®—å½“å‰èŠ‚ç‚¹åˆ°ä¸‹ä¸€èŠ‚ç‚¹è½¬ç§»çš„æ¦‚ç‡
     double Transition(int i, int j);
-    //¾Ö²¿¸üĞÂ¹æÔò
+    //å±€éƒ¨æ›´æ–°è§„åˆ™
     void UpdateLocalPathRule(int i, int j);
-    //³õÊ¼»¯
+    //åˆå§‹åŒ–
     void InitParameter(vector<CPart> testData, double allDistance[][partNum]);
-    //È«¾ÖĞÅÏ¢ËØ¸üĞÂ
-    void UpdateGlobalPathRule(tourType bestTour, int gloalbestValue);
+    //å…¨å±€ä¿¡æ¯ç´ æ›´æ–°
+    void UpdateGlobalPathRule(tourType bestTour, double gloalbestValue);
 };
 
 
@@ -29,24 +29,24 @@ class ACSAnt
 private:
     AntColonySystem* antColony;
 protected:
-    int startNode, currentNode;//³õÊ¼½Úµã±àºÅ£¬µ±Ç°½Úµã±àºÅ
-    int allowed[partNum];//½û¼É±í
-    tourType Tour;//µ±Ç°Â·¾¶
-    int currentTourIndex;//µ±Ç°Â·¾¶Ë÷Òı£¬´Ó0¿ªÊ¼£¬´æ´¢ÂìÒÏ¾­¹ı³ÇÊĞµÄ±àºÅ
+    int startNode, currentNode;//åˆå§‹èŠ‚ç‚¹ç¼–å·ï¼Œå½“å‰èŠ‚ç‚¹ç¼–å·
+    int allowed[partNum];//ç¦å¿Œè¡¨
+    tourType Tour;//å½“å‰è·¯å¾„
+    int currentTourIndex;//å½“å‰è·¯å¾„ç´¢å¼•ï¼Œä»0å¼€å§‹ï¼Œå­˜å‚¨èš‚èšç»è¿‡åŸå¸‚çš„ç¼–å·
 public:
     ACSAnt(AntColonySystem* acs, int start)
     {
         antColony = acs;
         startNode = start;
-        //³õÊ¼»¯Tour
+        //åˆå§‹åŒ–Tour
         for(int i=0;i<partNum;i++)
             Tour.push_back({0,0});
     }
-    //¿ªÊ¼ËÑË÷
+    //å¼€å§‹æœç´¢
     tourType Search();
-    //Ñ¡ÔñÏÂÒ»½Úµã
+    //é€‰æ‹©ä¸‹ä¸€èŠ‚ç‚¹
     int Choose();
-    //ÒÆ¶¯µ½ÏÂÒ»½Úµã
+    //ç§»åŠ¨åˆ°ä¸‹ä¸€èŠ‚ç‚¹
     void MoveToNextNode(int nextNode);
 };
 

@@ -1,28 +1,28 @@
 #include "ant.h"
 #include <math.h>
 
-//¼ÆËãµ±Ç°½Úµãµ½ÏÂÒ»½Úµã×ªÒÆµÄ¸ÅÂÊ
+//è®¡ç®—å½“å‰èŠ‚ç‚¹åˆ°ä¸‹ä¸€èŠ‚ç‚¹è½¬ç§»çš„æ¦‚ç‡
 double AntColonySystem::Transition(int i, int j)
 {
     if (i != j)
     {
-        return (pow(info[i][j], alpha) * pow(visible[i][j], beta)); //µÚÒ»¸ö²ÎÊıÊÇÒÑ¾­Ñ¡µÄ
+        return (pow(info[i][j], alpha) * pow(visible[i][j], beta)); //ç¬¬ä¸€ä¸ªå‚æ•°æ˜¯å·²ç»é€‰çš„
     }
     else
     {
         return 0.0;
     }
 }
-//¾Ö²¿¸üĞÂ¹æÔò
+//å±€éƒ¨æ›´æ–°è§„åˆ™
 void AntColonySystem::UpdateLocalPathRule(int i, int j)
 {
-    //iÊÇµ±Ç°½Úµã£¬Ö»µ÷ÏòÏÂÒ»¸ö½Úµã×ªÒÆµÄ¸ÅÂÊ
+    //iæ˜¯å½“å‰èŠ‚ç‚¹ï¼Œåªè°ƒå‘ä¸‹ä¸€ä¸ªèŠ‚ç‚¹è½¬ç§»çš„æ¦‚ç‡
     info[i][j] = (1.0 - alpha1) * info[i][j];
 }
-//³õÊ¼»¯
+//åˆå§‹åŒ–
 void AntColonySystem::InitParameter(vector<CPart> testData, double allDistance[partNum][partNum])
 {
-    //³õÊ¼»¯Â·¾¶ÉÏµÄĞÅÏ¢ËØÇ¿¶Ètao0
+    //åˆå§‹åŒ–è·¯å¾„ä¸Šçš„ä¿¡æ¯ç´ å¼ºåº¦tao0
     for (int i = 0; i < partNum; i++)
     {
         for (int j = 0; j < partNum; j++)
@@ -31,32 +31,32 @@ void AntColonySystem::InitParameter(vector<CPart> testData, double allDistance[p
             info[j][i] = allDistance[j][i];
             if (i != j)
             {
-                visible[i][j] = testData[j].getArea(); //ÕâÀïÓĞÊ¹ÓÃallDistance³õÊ¼»¯
+                visible[i][j] = testData[j].getArea(); //è¿™é‡Œæœ‰ä½¿ç”¨allDistanceåˆå§‹åŒ–
             }
         }
     }
 }
 
-//È«¾ÖĞÅÏ¢ËØ¸üĞÂ
-void AntColonySystem::UpdateGlobalPathRule(tourType bestTour, int gloalbestValue) //fix:´Ëº¯ÊıÒª¸Ä£¬ÈëÂ¯ĞòÁĞÉú³Éºó¸ù¾İÊ±¼äµ÷Õû
+//å…¨å±€ä¿¡æ¯ç´ æ›´æ–°
+void AntColonySystem::UpdateGlobalPathRule(tourType bestTour, double gloalbestValue) //fix:æ­¤å‡½æ•°è¦æ”¹ï¼Œå…¥ç‚‰åºåˆ—ç”Ÿæˆåæ ¹æ®æ—¶é—´è°ƒæ•´
 {
     for(int i=0;i<partNum;i++)
     {
         for(int j=0;j<partNum;j++)
-            info[i][j]*=(1-rou); //»Ó·¢
+            info[i][j]*=(1-rou); //æŒ¥å‘
     }
 
     for (int i = 0; i < partNum; i++)
     {
         int row = bestTour[i][0];
         int col = bestTour[i][1];
-        info[row][col] += rou * gloalbestValue; //Ö»¸ø×îÓÅÂ·¾¶ÖĞ½ÚµãÔö¼Ó
+        info[row][col] += rou * gloalbestValue; //åªç»™æœ€ä¼˜è·¯å¾„ä¸­èŠ‚ç‚¹å¢åŠ 
     }
 }
 
 
 
-//¿ªÊ¼ËÑË÷
+//å¼€å§‹æœç´¢
 tourType ACSAnt::Search()
 {
     currentNode = startNode;
@@ -77,7 +77,7 @@ tourType ACSAnt::Search()
         if (toNode >= 0)
         {
             MoveToNextNode(toNode);
-            antColony->UpdateLocalPathRule(endNode, toNode); //endÊÇµ±Ç°½Úµã
+            antColony->UpdateLocalPathRule(endNode, toNode); //endæ˜¯å½“å‰èŠ‚ç‚¹
             currentNode = toNode;
         }
     } while (toNode >= 0);
@@ -87,21 +87,21 @@ tourType ACSAnt::Search()
     return Tour;
 }
 
-//Ñ¡ÔñÏÂÒ»½Úµã
+//é€‰æ‹©ä¸‹ä¸€èŠ‚ç‚¹
 int ACSAnt::Choose()
 {
     int nextNode = -1;
     double q = rand() / (double)RAND_MAX;
-    //Èç¹û q <= q0,°´ÏÈÑéÖªÊ¶£¬·ñÔòÔò°´¸ÅÂÊ×ªÒÆ£¬
+    //å¦‚æœ q <= q0,æŒ‰å…ˆéªŒçŸ¥è¯†ï¼Œå¦åˆ™åˆ™æŒ‰æ¦‚ç‡è½¬ç§»ï¼Œ
     if (q <= qzero)
     {
-        double probability = -1.0;//×ªÒÆµ½ÏÂÒ»½ÚµãµÄ¸ÅÂÊ
+        double probability = -1.0;//è½¬ç§»åˆ°ä¸‹ä¸€èŠ‚ç‚¹çš„æ¦‚ç‡
         for (int i = 0; i < partNum; i++)
         {
-            //È¥µô½û¼É±íÖĞÒÑ×ß¹ıµÄ½Úµã,´ÓÊ£ÏÂ½ÚµãÖĞÑ¡Ôñ×î´ó¸ÅÂÊµÄ¿ÉĞĞ½Úµã
+            //å»æ‰ç¦å¿Œè¡¨ä¸­å·²èµ°è¿‡çš„èŠ‚ç‚¹,ä»å‰©ä¸‹èŠ‚ç‚¹ä¸­é€‰æ‹©æœ€å¤§æ¦‚ç‡çš„å¯è¡ŒèŠ‚ç‚¹
             if (1 == allowed[i])
             {
-                double prob = antColony->Transition(currentNode, i); //µÚÒ»¸ö²ÎÊıÊÇÒÑ¾­Ñ¡µÄ
+                double prob = antColony->Transition(currentNode, i); //ç¬¬ä¸€ä¸ªå‚æ•°æ˜¯å·²ç»é€‰çš„
                 if (prob > probability)
                 {
                     nextNode = i;
@@ -112,11 +112,11 @@ int ACSAnt::Choose()
     }
     else
     {
-        //°´¸ÅÂÊ×ªÒÆ
-        double p = rand() / (double)RAND_MAX;//Éú³ÉÒ»¸öËæ»úÊı,ÓÃÀ´ÅĞ¶ÏÂäÔÚÄÄ¸öÇø¼ä¶Î
+        //æŒ‰æ¦‚ç‡è½¬ç§»
+        double p = rand() / (double)RAND_MAX;//ç”Ÿæˆä¸€ä¸ªéšæœºæ•°,ç”¨æ¥åˆ¤æ–­è½åœ¨å“ªä¸ªåŒºé—´æ®µ
         double sum = 0.0;
-        double probability = 0.0;//¸ÅÂÊµÄÇø¼äµã£¬p ÂäÔÚÄÄ¸öÇø¼ä¶Î£¬Ôò¸ÃµãÊÇ×ªÒÆµÄ·½Ïò
-        //¼ÆËã¸ÅÂÊ¹«Ê½µÄ·ÖÄ¸µÄÖµ
+        double probability = 0.0;//æ¦‚ç‡çš„åŒºé—´ç‚¹ï¼Œp è½åœ¨å“ªä¸ªåŒºé—´æ®µï¼Œåˆ™è¯¥ç‚¹æ˜¯è½¬ç§»çš„æ–¹å‘
+        //è®¡ç®—æ¦‚ç‡å…¬å¼çš„åˆ†æ¯çš„å€¼
         for (int i = 0; i < partNum; i++)
         {
             if (1 == allowed[i])
@@ -140,10 +140,10 @@ int ACSAnt::Choose()
     return nextNode;
 }
 
-//ÒÆ¶¯µ½ÏÂÒ»½Úµã
+//ç§»åŠ¨åˆ°ä¸‹ä¸€èŠ‚ç‚¹
 void ACSAnt::MoveToNextNode(int nextNode)
 {
-    //ÕâÀïÊÇ²»ÊÇÒª¸ù¾İÁã¼şµÄÊıÁ¿ĞŞ¸Ä£¿
+    //è¿™é‡Œæ˜¯ä¸æ˜¯è¦æ ¹æ®é›¶ä»¶çš„æ•°é‡ä¿®æ”¹ï¼Ÿ
     allowed[nextNode] = 0;
     Tour[currentTourIndex][0] = currentNode;
     Tour[currentTourIndex][1] = nextNode;

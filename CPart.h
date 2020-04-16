@@ -3,16 +3,16 @@
 class CPart
 {
 private:
-    double dWeight;//ÖØÁ¿
+    double dWeight;//é‡é‡
     double dHeight;
     double dWidth;
-    double dArea; //Ãæ»ý
-    int nAmount; //³õÊ¼ÓÐ¶àÉÙ¿é
-    int nSurplusAmount; //Ê£Óà¶àÉÙ¿é
-    int nId; //Áã¼þ±àºÅ
+    double dArea; //é¢ç§¯
+    int nAmount; //åˆå§‹æœ‰å¤šå°‘å—
+    int nSurplusAmount; //å‰©ä½™å¤šå°‘å—
+    int nId; //é›¶ä»¶ç¼–å·
 public:
-    CPart(double dWeight, double dHeight, double dWidth) :
-        dWeight(dWeight), dHeight(dHeight), dWidth(dWidth), dArea(dHeight * dWidth){}
+    CPart(double dWeight, double dHeight, double dWidth, int nId) :
+        dWeight(dWeight), dHeight(dHeight), dWidth(dWidth), dArea(dHeight * dWidth), nId(nId) {}
     CPart(){}
     double getWeight() const { return dWeight; }
     double getHeight() const { return dHeight; }
@@ -20,8 +20,7 @@ public:
     double getArea() const { return dArea; }
 	int getSurplusAmount() { return nSurplusAmount; }
 	void setAmount(int amount) { this->nAmount = amount; this->nSurplusAmount = nAmount; }
-	void changeAmount(int nPutInAmount) { this->nSurplusAmount -= nPutInAmount; }//·ÅÈëºóÐÞ¸ÄÊ£ÓàÊýÁ¿
-	void setId(int nId) { this->nId = nId; }
+	void changeAmount(int nPutInAmount) { this->nSurplusAmount -= nPutInAmount; }//æ”¾å…¥åŽä¿®æ”¹å‰©ä½™æ•°é‡
     int getID() const { return this->nId; }
 };
 

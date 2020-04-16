@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <iostream>
 #include <vector>
+#include "solution.h"
 
 //最大循环次数NcMax
 const int NcMax = 500;
@@ -42,6 +43,16 @@ int ChooseNextNode(int currentNode, int visitedNode[],double allDistance[partNum
 	return nextNode;
 }
 
+bool isPartsSurplus(const vector<CPart> &testCopy)
+{
+    for(CPart c : testCopy)
+    {
+        if(c.getSurplusAmount()!=0)
+            return true;
+    }
+    return false;
+}
+
 //--------------------------主函数--------------------------------------------------
 int main()
 {
@@ -49,105 +60,70 @@ int main()
     double C[partNum][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1},{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,1},{36,15,1},{17,29,1},{19,54,1},{146,25,1} };
     double D[stoveNum][3] = { {200,200,2000} };
     caluDist cd(C,D); //包含初始化测试数据
-    int start = 1;
-	if (start)
-	{
-		time_t timer, timerl;
+    time_t timer, timerl;
 
-		time(&timer);
-		unsigned long seed = timer;
-		seed %= 56000;
-		srand((unsigned int)seed);
+    time(&timer);
+    unsigned long seed = timer;
+    seed %= 56000;
+    srand((unsigned int)seed);
 
-		//由矩阵表示两两城市之间的距离
-        cd.calculateAllDistance();
-		//蚁群系统对象
-		AntColonySystem* acs = new AntColonySystem();
-        ACSAnt* ants[antNum];
-		//蚂蚁均匀分布在城市上
-        for (int k = 0; k < antNum; k++)
-		{
-            ants[k] = new ACSAnt(acs, (int)(k % partNum));
-		}
-        cd.calculateAllDistance();
-        cd.calculateAllWeight();
-		//随机选择一个节点计算由最近邻方法得到的一个长度
-        int node = rand() % partNum;
+    //由矩阵表示两两城市之间的距离
+    cd.calculateAllDistance();
+    //蚁群系统对象
+    AntColonySystem* acs = new AntColonySystem();
+    ACSAnt* ants[antNum];
+    //蚂蚁均匀分布在城市上
+    for (int k = 0; k < antNum; k++)
+    {
+        ants[k] = new ACSAnt(acs, (int)(k % partNum));
+    }
+    cd.calculateAllDistance();
+    cd.calculateAllWeight();
 
-		//各条路径上初始化的信息素强度
-        acs->InitParameter(cd.testData,cd.allDistance);
+    //各条路径上初始化的信息素强度
+    acs->InitParameter(cd.testData,cd.allDistance);
 
-        //全局最优布局
-        CLayout *globalLayout=nullptr;
-        tourType globalTour;
-		//全局最优长度
-		double gloalbestValue = 0.0;
-		for (int i = 0; i < NcMax; i++)
-		{
-            //局部最优布局
-            CLayout *localLayout=nullptr;
-            tourType localTour;
-			//局部最优长度
-			double localBestValue = 0.0;
-			//当前路径长度
-			double tourCost;
-            for (int j = 0; j < antNum; j++) //每个蚂蚁行动
-			{
-                CLayout Layout=*cd.allStove[0];
-                vector<CPart> testCopy=cd.testData; //对于每个蚂蚁，拷贝一次
-                tourType tourPath = ants[j]->Search();
-                tourCost = cd.calculateSumOfDistance(tourPath, testCopy,Layout); //计算每个链的总价值和利用率
-                if (tourCost > localBestValue || abs(localBestValue - 0.0) < 0.000001) //是局部最好的
-				{
-                    delete localLayout;
-                    localLayout=new CLayout(Layout);
-                    localTour=tourPath;
-					localBestValue = tourCost;
-				}
-			}
-            //全局比较，并记录最优布局
-			if (localBestValue > gloalbestValue || abs(gloalbestValue - 0.0) < 0.000001)
-			{
-                delete globalLayout;
-                globalLayout=localLayout; //之前已经new过不用拷贝了
-                globalTour=localTour;
-				gloalbestValue = localBestValue;
-			}
-            acs->UpdateGlobalPathRule(globalTour, gloalbestValue);
-			//输出所有蚂蚁循环一次后的迭代最优路径
-            cout << "Iterative optimal path " << i + 1 << localBestValue << "." << endl;
-            for (int m = 0; m < partNum; m++)
-			{
-				cout << localTour[m][0] << ".";
-				//CargoNum[m] = 0;
-			}
-			cout << endl;
-		}
-		//输出全局最优路径
-        cout << "Total value:" << gloalbestValue << endl;
+    //全局最优布局
+    solution globalSolu;
+    for (int i = 0; i < NcMax; i++)
+    {
+        //局部最优
+        solution localSolu;
+        for (int j = 0; j < antNum; j++) //每个蚂蚁行动
+        {
+            vector<CPart> testCopy=cd.testData; //对于每个蚂蚁，拷贝一次（记录一个零件是否被放过）
+            tourType tourPath = ants[j]->Search(); //对于每个蚂蚁有一个序列
+            solution currentSolu(tourPath); //这个蚂蚁的解
 
-        cout << "Loading result:";
-		double sum = 0;
-        CLayout Layout(AreaWidth, AreaHeight, AreaWeight);
-        //sum=Layout.Calculate(globalTour, cd.testData); //fix:直接用getSum替换
-        sum=globalLayout->getSum();
-		cout << endl;
-        cout << "Total volume:" << sum << " Utilization ratio:" << sum /Layout.m_dVolume  << endl;
-        //cout << "Total weight:" << sumWeight << endl;
-		time(&timerl);
-		double t = timerl - timer;
-		//cout << testData[globalTour[0][0]].getHeight() << " " << testData[globalTour[0][0]].getWidth() << endl;
-        //Layout.showLayoutList();
-        //cout << Layout.AvailSize() << endl;
-        cout<<globalLayout->AvailSize()<<endl;
-        //cout << "Number of parts:" << Layout.getLayoutListSize() << endl;
-        cout << "Number of parts:" << globalLayout->getLayoutListSize() << endl;
-        cout << "time:" << t << endl;
-        //Layout.showLayoutPartNo();
-        globalLayout->showLayoutPartNo();
-		//initgraph(640, 480);
-		//setorigin(0,0);
-		return 0;
-	}
-	
+            while(isPartsSurplus(testCopy))
+            {
+                //装一个炉子
+                CLayout Layout=*cd.allStove[0]; //fix:改成选择一个炉子（需要看哪个炉子先空出来）
+                double utilization = cd.calculateSumOfDistance(tourPath, testCopy, Layout);
+                currentSolu.allLayout.push_back(Layout);
+                currentSolu.value=utilization;
+                break;
+            }
+            //currentSolu.caluValue(); //计算这些炉子所需总时间
+
+            if (currentSolu.getValue() > localSolu.getValue() || abs(localSolu.getValue()) < 0.000001) //是局部最好的
+                localSolu=currentSolu;
+        }
+        //全局比较，并记录最优布局
+        if (localSolu.getValue() > globalSolu.getValue() || abs(globalSolu.getValue()) < 0.000001)
+            globalSolu=localSolu;
+
+        acs->UpdateGlobalPathRule(globalSolu.tourPath, globalSolu.getValue()); //fix:改成根据solu总时间折算评分增加值
+        //输出所有蚂蚁循环一次后的迭代最优路径
+        cout << "Iterative optimal path " << i + 1 << globalSolu.getValue() << "." << endl;
+        globalSolu.output();
+    }
+    //输出全局最优路径
+    cout << "Total value:" << globalSolu.getValue() << endl;
+    cout << " Utilization ratio:" << globalSolu.utilization() << endl;
+    time(&timerl);
+    double t = timerl - timer;
+    cout << "time:" << t << endl;
+    //initgraph(640, 480);
+    //setorigin(0,0);
 }

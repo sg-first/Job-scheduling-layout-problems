@@ -16,7 +16,7 @@ double RND(double dbLow, double dbUpper)//产生随机数
 }
 
 CLayout::CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight) :
-    m_dWidth(dAreaWidth), m_dHeight(dAreaHeight), m_dWeight(dAreaWeight), m_dWeightLeft(dAreaWeight), m_dVolume(dAreaWidth*dAreaHeight)
+    m_dWeightLeft(dAreaWeight), m_dWidth(dAreaWidth), m_dHeight(dAreaHeight), m_dWeight(dAreaWeight), m_dArea(dAreaWidth*dAreaHeight)
 {
     CAreaList tmpArea;
     tmpArea.setHeight(dAreaHeight);
@@ -507,7 +507,7 @@ double CLayout::Calculate(tourType tour, vector<CPart> &Part)
     CAreaList tmpArea;
     int nPartNo;//零件编号
     int nCanBePutIn;//能否放下
-    int bTrans;
+    bool bTrans;
     bool bUseless;//队首空间是废空间
     bool bPartExist;//是否还有待排零件
     list<CAreaList>::iterator itAvail = m_lstAvailable.begin();
@@ -526,8 +526,9 @@ double CLayout::Calculate(tourType tour, vector<CPart> &Part)
                 bPartExist = true;
                 if (nCanBePutIn != 0)
                 {
-                    bool bTrans = false;
-                    if (nCanBePutIn == -1) bTrans = true;
+                    bTrans = false;
+                    if (nCanBePutIn == -1)
+                        bTrans = true;
                     bUseless = false;
                     break;
                 }
@@ -560,7 +561,7 @@ double CLayout::Calculate(tourType tour, vector<CPart> &Part)
     return m_dUsedArea;
 }
 
-double CLayout::getSum()
+double CLayout::getUseArea()
 {
     double sum=0;
     list<CLayoutList>::iterator itLayout=m_lstLayout.begin();
@@ -569,6 +570,13 @@ double CLayout::getSum()
         sum+=itLayout->getW()*itLayout->getH();
     }
     return sum;
+}
+
+void CLayout::outputAllPart()
+{
+    list<CLayoutList>::iterator itLayout=m_lstLayout.begin();
+    for(;itLayout!=m_lstLayout.end();itLayout++)
+        cout <<  itLayout->getPart().getID() << ".";
 }
 
 void CLayout::testMerge()
@@ -588,13 +596,12 @@ void CLayout::testMerge()
     tmpArea.setWidth(10.0);
     m_lstUseless.push_back(tmpArea);
     this->Merge();
-    if(! m_lstAvailable.empty()) auto itUseless = m_lstUseless.begin();
 
     cout << "TestMerge AvailBegin X " << itAvail->getX() << " Y " << itAvail->getY() << " Height " << itAvail->getHeight() << " Width " << itAvail->getWidth() << endl;
     //cout << "TestMerge Useless X " << itUseless->getX() << " Y " << itUseless->getY() << " Height " << itUseless->getHeight() << " Width " << itUseless->getWidth() << endl;
 }
 
-void CLayout::showLayoutPartNo()
+/*void CLayout::showLayoutPartNo()
 {
     auto p = m_lstLayout.begin();
     cout << "Part number (sequence):" << endl;
@@ -602,7 +609,7 @@ void CLayout::showLayoutPartNo()
     {
         cout << p->getPart().getID() << endl;
     }
-}
+}*/
 
 void CLayout::FindUseless(CPart* data)
 {

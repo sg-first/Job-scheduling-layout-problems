@@ -4,13 +4,13 @@
 class CLayoutList
 {
 private:
-	double x;//零件的x坐标 
-	double y;//零件的y坐标 
-	double w;//零件的宽 
-	double h;//零件的高 
+	double x;//闆朵欢鐨剎鍧愭爣 
+	double y;//闆朵欢鐨剏鍧愭爣 
+	double w;//闆朵欢鐨勫 
+	double h;//闆朵欢鐨勯珮 
 	double dWeightUsed;
-	int nHorizonAmount;//横向个数
-	int nVerticalAmount;//纵向个数
+	int nHorizonAmount;//妯悜涓暟
+	int nVerticalAmount;//绾靛悜涓暟
 	CPart Part;
 
 public:
