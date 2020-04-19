@@ -4,7 +4,7 @@
 //信息启发因子，期望启发式因子，全局信息素挥发参数，局部信息素挥发参数, 状态转移公式中的q0
 const double alpha = 2, beta = 4, rou = 0.6, alpha1 = 0.1, qzero = 0.01; //these parameters produce the best solution
 //蚂蚁数量
-const int antNum=15;
+const int antNum=25;
 
 class ACSAnt;
 

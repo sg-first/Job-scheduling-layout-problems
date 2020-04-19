@@ -57,7 +57,8 @@ int CLayout::CanBePutIn(CPart Part)
     nWeightMost = int(m_dWeightLeft / Part.getWeight());
     CanbePutInMost = min(nWeightMost, Part.getSurplusAmount());
     //cout << "CanBePutIn: VerticalMost: " << nVerticalMost << " WeightMost: " << nWeightMost << " CanbePutInMost: " << CanbePutInMost << endl;
-    if ((nVerticalMost == 0) && int(itAvail->getHeight() / Part.getWidth() == 0)) return 0;
+    if ((nVerticalMost == 0) && int(itAvail->getHeight() / Part.getWidth() == 0))
+        return 0;
     if (nVerticalMost > 0 && itAvail->getWidth() >= dPartWidth)
     {
         //cout << "不转置可以放入" << endl;
@@ -121,10 +122,14 @@ int CLayout::CanBePutIn(CPart Part)
     //else cout << "转置不可以放入" << endl;
     //cout << "CanBePutIn: WithTrans: PutInAmount: " << nPutInAmount << endl;
     //比较是否转置
-    if (nPutInAmountWithoutTrans == 0 && nPutInAmount == 0) return 0;
-    if (dSurplusAreaWithoutTrans <= 0 && dSurplusAreaWithTrans <= 0)return 0;
-    else if (dSurplusAreaWithoutTrans <= 0 && dSurplusAreaWithTrans > 0)return -1;
-    else if (dSurplusAreaWithoutTrans > 0 && dSurplusAreaWithTrans <= 0)return 1;
+    if (nPutInAmountWithoutTrans == 0 && nPutInAmount == 0)
+        return 0;
+    if (dSurplusAreaWithoutTrans <= 0 && dSurplusAreaWithTrans <= 0)
+        return 0;
+    else if (dSurplusAreaWithoutTrans <= 0 && dSurplusAreaWithTrans > 0)
+        return -1;
+    else if (dSurplusAreaWithoutTrans > 0 && dSurplusAreaWithTrans <= 0)
+        return 1;
     //如果只放置一个 则随机决定是否转置
     /*else
     {
@@ -409,99 +414,6 @@ void CLayout::Merge()
     }
 }
 
-/*void CLayout::Merge()
-{
-    CAreaList tmpArea;
-    std::list<CAreaList>::iterator itAvail;
-    std::list<CAreaList>::iterator itUseless;
-    double dAvailX;  //可用空间的尺寸
-    double dAvailY;
-    double dAvailH;
-    double dAvailW;
-    double dUselessX;   //废弃空间的尺寸
-    double dUselessY;
-    double dUselessH;
-    double dUselessW;
-    if (!m_lstUseless.empty() && !m_lstAvailable.empty())    //合并
-    {
-        for (itUseless = m_lstUseless.begin(); itUseless != m_lstUseless.end(); itUseless++)
-        {
-            dUselessX = itUseless->getX();
-            dUselessY = itUseless->getY();
-            dUselessW = itUseless->getWidth();
-            dUselessH = itUseless->getHeight();
-            for (itAvail = m_lstAvailable.begin(); itAvail != m_lstAvailable.end(); itAvail++)
-            {
-                dAvailX = itAvail->getX();
-                dAvailY = itAvail->getY();
-                dAvailH = itAvail->getHeight();
-                dAvailW = itAvail->getWidth();
-
-                if (dAvailX + dAvailW == dUselessX)   //左可用右废弃=============>>>似乎不会出现这种情况
-                {
-                    if (dAvailY == dUselessY)  //左右一样长（高度），直接合并
-                    {
-                        itAvail->setWidth(dAvailW + dUselessW);   //X不变，宽度增加
-                        m_lstUseless.erase(itUseless);
-                        m_lstAvailable.sort(); //排序
-                        return;
-                    }
-                    else if (dAvailY < dUselessY)   //  左长右短，横向分割成两块可用区域
-                    {
-                        itAvail->setHeight(dAvailH - dUselessH);
-                        tmpArea.setX(dAvailX);
-                        tmpArea.setY(dUselessY);
-                        tmpArea.setWidth(dAvailW + dUselessW);
-                        tmpArea.setHeight(dUselessH);
-                        m_lstAvailable.push_back(tmpArea);
-                        m_lstUseless.erase(itUseless);
-                        m_lstAvailable.sort(); //排序
-                        return;
-                    }
-                    else    //  左短右长，右下废弃
-                    {
-                        itUseless->setHeight(dUselessH - dAvailH);
-                        itAvail->setWidth(dAvailW + dUselessW);
-                    }
-                }
-
-                if (dUselessX + dUselessW == dAvailX)			//左废弃右可用
-                {
-                    if (dUselessY == dAvailY)  //两块一样高，直接合并
-                    {
-                        itAvail->setX(dUselessX);    //X左移
-                        itAvail->setWidth(dAvailW + dUselessW);  //宽度增加
-                        m_lstUseless.erase(itUseless);
-                        m_lstAvailable.sort(); //排序
-                        return;
-                    }
-                    else if (dUselessY < dAvailY)  //左长右短，左下废弃
-                    {
-                        itUseless->setHeight(dUselessH - dAvailH);
-                        itAvail->setX(dUselessX);	//X左移
-                        itAvail->setWidth(dAvailW + dUselessW);	//宽度增加
-                        m_lstAvailable.sort(); //排序
-                        return;
-                    }
-                    else		//  左短右长，横向分割成两块可用区域
-                    {
-                        itAvail->setHeight(dAvailH - dUselessH);
-                        tmpArea.setX(dUselessX);
-                        tmpArea.setY(dUselessY);
-                        tmpArea.setWidth(dAvailW + dUselessW);
-                        tmpArea.setHeight(dUselessH);
-                        m_lstAvailable.push_back(tmpArea);
-                        m_lstUseless.erase(itUseless);
-                        m_lstAvailable.sort(); //排序
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-}*/
-
 double CLayout::Calculate(tourType tour, vector<CPart> &Part)
 {
     CAreaList tmpArea;
@@ -595,7 +507,7 @@ bool CLayout::verifyDeadLine(int line)
     list<CLayoutList>::iterator itLayout=m_lstLayout.begin();
     for(;itLayout!=m_lstLayout.end();itLayout++)
     {
-        if(itLayout->getPart().getDeadline()>line)
+        if(itLayout->getPart().getDeadline()<line)
             return false;
     }
     return true;

@@ -23,7 +23,11 @@ public:
     double getWidth() const { return dWidth; }
     double getArea() const { return dArea; }
 	int getSurplusAmount() { return nSurplusAmount; }
-	void setAmount(int amount) { this->nAmount = amount; this->nSurplusAmount = nAmount; }
+    void setAmount(int amount)
+    {
+        this->nAmount = amount;
+        this->nSurplusAmount = nAmount;
+    }
 	void changeAmount(int nPutInAmount) { this->nSurplusAmount -= nPutInAmount; }//放入后修改剩余数量
     int getID() const { return this->nId; }
     int getDeadline() const { return this->deadline; }

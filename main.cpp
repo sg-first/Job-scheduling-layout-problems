@@ -10,7 +10,7 @@
 #include "solution.h"
 
 //最大循环次数NcMax
-const int NcMax = 500;
+const int NcMax = 1000;
 
 //===========================================================================================================
 //局部更新时候使用的的常量，它是由最近邻方法得到的一个长度
@@ -47,7 +47,7 @@ bool isPartsSurplus(const vector<CPart> &testCopy)
 {
     for(CPart c : testCopy)
     {
-        if(c.getSurplusAmount()!=0)
+        if(c.getSurplusAmount()>0)
             return true;
     }
     return false;
@@ -57,7 +57,9 @@ bool isPartsSurplus(const vector<CPart> &testCopy)
 int main()
 {
     //初始数据
-    double C[partNum][3] = { {41,12,1},{25,34,1},{19,44,1},{115,22,1},{25,51,1},{16,22,1},{71,22,1},{44,109,1},{41,29,1},{90,87,1},{35,137,1},{31,68,1},{129,44,1},{36,15,1},{17,29,1},{19,54,1},{146,25,1} };
+    double C[partNum][5] = { {41,12,1,9999,20},{25,34,1,9999,15},{19,44,1,9999,18},{115,22,1,9999,17},{25,51,1,9999,16},{16,22,1,9999,19},
+                             {71,22,1,9999,14},{44,109,1,9999,13},{41,29,1,9999,12},{90,87,1,9999,11},{35,137,1,9999,10},{31,68,1,9999,9},
+                             {129,44,1,9999,8},{36,15,1,9999,7},{17,29,1,9999,6},{19,54,1,9999,5},{146,25,1,9999,4} };
     double D[stoveNum][3] = { {200,200,2000} };
     caluDist cd(C,D); //包含初始化测试数据
     time_t timer, timerl;
@@ -104,7 +106,7 @@ int main()
                 Layout.caluTime();
                 currentSolu.allLayout.push_back(Layout);
                 currentSolu.caluTime(); //计算这些炉子所需总时间
-                if(Layout.verifyDeadLine(currentSolu.getTime())==false) //有零件不满足截止日期
+                if(Layout.getUseArea()==0 || Layout.verifyDeadLine(currentSolu.getTime())==false) //无法装入或有零件不满足截止日期
                 {
                     useSolu=false; //这个解不使用
                     break;
@@ -128,7 +130,7 @@ int main()
     }
     //输出全局最优路径
     cout << "Total value:" << globalSolu.getTime() << endl;
-    cout << " Utilization ratio:" << globalSolu.utilization() << endl;
+    cout << "Utilization ratio:" << globalSolu.utilization() << endl;
     time(&timerl);
     double t = timerl - timer;
     cout << "time:" << t << endl;

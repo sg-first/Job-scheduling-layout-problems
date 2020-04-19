@@ -12,7 +12,7 @@ const int AreaWeight = 2000;
 class caluDist
 {
 public:
-    double (*C)[3];
+    double (*C)[5];
     vector<CLayout*> allStove;
 
     caluDist(double C[partNum][5], double D[stoveNum][3])
@@ -23,8 +23,8 @@ public:
         {
             double width = C[i][0];
             double height = C[i][1];
-            double weight = C[i][3]; //fix:改成实际重量
-            CPart part(weight, width, height, i, C[i][4], C[i][5]);
+            double weight = C[i][2]; //fix:改成实际重量
+            CPart part(weight, width, height, i, C[i][3], C[i][4]);
             part.setAmount(1);
             this->testData.push_back(part);
         }
