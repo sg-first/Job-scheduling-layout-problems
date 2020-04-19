@@ -15,7 +15,7 @@ public:
     double (*C)[3];
     vector<CLayout*> allStove;
 
-    caluDist(double C[partNum][3], double D[stoveNum][3])
+    caluDist(double C[partNum][5], double D[stoveNum][3])
     {
         this->C=C;
         //初始化零件
@@ -23,8 +23,8 @@ public:
         {
             double width = C[i][0];
             double height = C[i][1];
-            double weight = 1; //fix:改成实际重量
-            CPart part(weight, width, height, i);
+            double weight = C[i][3]; //fix:改成实际重量
+            CPart part(weight, width, height, i, C[i][4], C[i][5]);
             part.setAmount(1);
             this->testData.push_back(part);
         }
