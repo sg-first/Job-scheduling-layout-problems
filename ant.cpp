@@ -31,7 +31,7 @@ void AntColonySystem::InitParameter(vector<CPart> testData, double allDistance[p
             info[j][i] = allDistance[j][i];
             if (i != j)
             {
-                visible[i][j] = testData[j].getArea(); //这里有使用allDistance初始化
+                visible[i][j] = 1/testData[j].getDeadline(); //这里有使用allDistance初始化
             }
         }
     }
@@ -50,7 +50,8 @@ void AntColonySystem::UpdateGlobalPathRule(tourType bestTour, double gloalbestVa
     {
         int row = bestTour[i][0];
         int col = bestTour[i][1];
-        info[row][col] += rou * gloalbestValue; //只给最优路径中节点增加
+        info[row][col] += rou * 1/gloalbestValue; //只给最优路径中节点增加
+        //一个时间相反的数，分数越高说明时间越小
     }
 }
 

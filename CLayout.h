@@ -29,8 +29,12 @@ private:
     double m_dWeight; //重量
     double m_dArea; //体积
 
+    int time=0;
+    int ID;
+
 public:
-    CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight);//初始化区域
+    CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight, int ID);//初始化区域
+
     int CanBePutIn(CPart Part);
 	int PutIn(CPart& Part, bool bTrans);//返回装入的数量 引用为了修改零件的剩余重量
 	double UpdateList(double dWidth, double dHeight, int nHorizonAmount, int nVerticalAmount, CPart Part, double dWeight);
@@ -44,5 +48,9 @@ public:
     double getUseArea();
     double getArea() const { return this->m_dArea; }
     void outputAllPart(); //原先showLayoutPartNo已换成这个
+    void caluTime();
+    int getTime() const { return this->time; }
+    bool verifyDeadLine(int line); //验证是否所有零件都符合截止日期
+    int getID() { return this->ID; }
 };
 

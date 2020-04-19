@@ -23,7 +23,7 @@ public:
 	double getHorizonAmount() { return nHorizonAmount; }
 	double getVerticalAmount() { return nVerticalAmount; }
 	double getWeightUsed() { return dWeightUsed; }
-	CPart getPart() { return this->Part; }
+    const CPart& getPart() { return this->Part; }
 	void setX(double x) { this->x = x; }
 	void setY(double y) { this->y = y; }
 	void setW(double w) { this->w = w; }

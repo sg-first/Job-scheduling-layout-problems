@@ -3,7 +3,7 @@
 #include "CLayout.h"
 #include <array>
 #include <vector>
-#include<algorithm>
+#include <algorithm>
 
 const int AreaWidth = 200;
 const int AreaHeight = 200;
@@ -11,25 +11,6 @@ const int AreaWeight = 2000;
 
 class caluDist
 {
-private:
-    int getMaxDeadLine()
-    {
-        int max=0;
-        for (int i = 0; i < partNum; i++)
-        {
-            if(this->C[i][4]>max)
-                max=this->C[i][4];
-        }
-        return max;
-    }
-
-    void deadLineInv()
-    {
-        int max=getMaxDeadLine();
-        for (int i = 0; i < partNum; i++)
-            this->C[i][4]=max-this->C[i][4]; //fix:这里应该按面积排一下
-    }
-
 public:
     double (*C)[3];
     vector<CLayout*> allStove;
@@ -51,7 +32,8 @@ public:
         for(int i=0;i<stoveNum;i++)
         {
             auto Di=D[i];
-            this->allStove.push_back(new CLayout(Di[0],Di[1],Di[2]));
+            auto layout=new CLayout(Di[0],Di[1],Di[2],this->allStove.size()); //下标就是ID
+            this->allStove.push_back(layout);
         }
         sort(this->allStove.begin(), this->allStove.end(),
              [](CLayout* &a, CLayout* &b){ return a->getArea() > b->getArea(); }); //降序排列

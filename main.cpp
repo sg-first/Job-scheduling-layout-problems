@@ -95,31 +95,39 @@ int main()
             tourType tourPath = ants[j]->Search(); //对于每个蚂蚁有一个序列
             solution currentSolu(tourPath); //这个蚂蚁的解
 
+            bool useSolu=true;
             while(isPartsSurplus(testCopy))
             {
                 //装一个炉子
-                CLayout Layout=*cd.allStove[0]; //fix:改成选择一个炉子（需要看哪个炉子先空出来）
+                CLayout Layout=currentSolu.getNextStove(cd);
                 double utilization = cd.calculateSumOfDistance(tourPath, testCopy, Layout);
+                Layout.caluTime();
                 currentSolu.allLayout.push_back(Layout);
-                currentSolu.value=utilization;
-                break;
+                currentSolu.caluTime(); //计算这些炉子所需总时间
+                if(Layout.verifyDeadLine(currentSolu.getTime())==false) //有零件不满足截止日期
+                {
+                    useSolu=false; //这个解不使用
+                    break;
+                }
             }
-            //currentSolu.caluValue(); //计算这些炉子所需总时间
 
-            if (currentSolu.getValue() > localSolu.getValue() || abs(localSolu.getValue()) < 0.000001) //是局部最好的
-                localSolu=currentSolu;
+            if(useSolu)
+            {
+                if (currentSolu.getTime() > localSolu.getTime() || abs(localSolu.getTime()) < 0.000001) //是局部最好的
+                    localSolu=currentSolu;
+            }
         }
         //全局比较，并记录最优布局
-        if (localSolu.getValue() > globalSolu.getValue() || abs(globalSolu.getValue()) < 0.000001)
+        if (localSolu.getTime() > globalSolu.getTime() || abs(globalSolu.getTime()) < 0.000001)
             globalSolu=localSolu;
 
-        acs->UpdateGlobalPathRule(globalSolu.tourPath, globalSolu.getValue()); //fix:改成根据solu总时间折算评分增加值
+        acs->UpdateGlobalPathRule(globalSolu.tourPath, globalSolu.getTime());
         //输出所有蚂蚁循环一次后的迭代最优路径
-        cout << "Iterative optimal path " << i + 1 << globalSolu.getValue() << "." << endl;
+        cout << "Iterative optimal path " << i + 1 << globalSolu.getTime() << "." << endl;
         globalSolu.output();
     }
     //输出全局最优路径
-    cout << "Total value:" << globalSolu.getValue() << endl;
+    cout << "Total value:" << globalSolu.getTime() << endl;
     cout << " Utilization ratio:" << globalSolu.utilization() << endl;
     time(&timerl);
     double t = timerl - timer;

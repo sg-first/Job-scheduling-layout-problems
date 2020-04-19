@@ -15,8 +15,8 @@ double RND(double dbLow, double dbUpper)//产生随机数
     return (dbUpper - dbLow) * rand() / ((double)RAND_MAX + 1.0) + dbLow;
 }
 
-CLayout::CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight) :
-    m_dWeightLeft(dAreaWeight), m_dWidth(dAreaWidth), m_dHeight(dAreaHeight), m_dWeight(dAreaWeight), m_dArea(dAreaWidth*dAreaHeight)
+CLayout::CLayout(double dAreaWidth, double dAreaHeight, double dAreaWeight, int ID) :
+    m_dWeightLeft(dAreaWeight), m_dWidth(dAreaWidth), m_dHeight(dAreaHeight), m_dWeight(dAreaWeight), m_dArea(dAreaWidth*dAreaHeight), ID(ID)
 {
     CAreaList tmpArea;
     tmpArea.setHeight(dAreaHeight);
@@ -577,6 +577,28 @@ void CLayout::outputAllPart()
     list<CLayoutList>::iterator itLayout=m_lstLayout.begin();
     for(;itLayout!=m_lstLayout.end();itLayout++)
         cout <<  itLayout->getPart().getID() << ".";
+}
+
+void CLayout::caluTime()
+{
+    list<CLayoutList>::iterator itLayout=m_lstLayout.begin();
+    for(;itLayout!=m_lstLayout.end();itLayout++)
+    {
+        int partTime=itLayout->getPart().getTime();
+        if(partTime>this->time)
+            this->time=partTime;
+    }
+}
+
+bool CLayout::verifyDeadLine(int line)
+{
+    list<CLayoutList>::iterator itLayout=m_lstLayout.begin();
+    for(;itLayout!=m_lstLayout.end();itLayout++)
+    {
+        if(itLayout->getPart().getDeadline()>line)
+            return false;
+    }
+    return true;
 }
 
 void CLayout::testMerge()
