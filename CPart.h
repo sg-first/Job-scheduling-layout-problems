@@ -22,7 +22,7 @@ public:
     double getHeight() const { return dHeight; }
     double getWidth() const { return dWidth; }
     double getArea() const { return dArea; }
-	int getSurplusAmount() { return nSurplusAmount; }
+    int getSurplusAmount() const { return nSurplusAmount; }
     void setAmount(int amount)
     {
         this->nAmount = amount;

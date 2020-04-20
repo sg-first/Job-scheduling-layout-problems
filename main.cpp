@@ -106,7 +106,7 @@ int main()
                 Layout.caluTime();
                 currentSolu.allLayout.push_back(Layout);
                 currentSolu.caluTime(); //计算这些炉子所需总时间
-                if(Layout.getUseArea()==0 || Layout.verifyDeadLine(currentSolu.getTime())==false) //无法装入或有零件不满足截止日期
+                if(Layout.verifyDeadLine(currentSolu.getTime())==false) //不满足截止日期
                 {
                     useSolu=false; //这个解不使用
                     break;
